@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 245 6% 96%;
+    --foreground: 0 0% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 11%;
+
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 0 0% 11%;
+
+    --muted: 240 5% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 160 84% 39%;
+
+    --radius: 1rem;
+
+    --sidebar-background: 0 0% 4%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 10%;
+    --sidebar-ring: 160 84% 39%;
+
+    --glass-bg: 255 255 255 / 0.03;
+    --glass-border: 255 255 255 / 0.06;
+    --glass-hover: 255 255 255 / 0.12;
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 0 0% 100%;
+
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 5%;
+    --ring: 160 84% 39%;
+
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 10%;
+    --sidebar-ring: 160 84% 39%;
+
+    --glass-bg: 255 255 255 / 0.03;
+    --glass-border: 255 255 255 / 0.06;
+    --glass-hover: 255 255 255 / 0.12;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: #333;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background: rgba(var(--glass-bg));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(var(--glass-border));
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4),
+                0 16px 32px rgba(0, 0, 0, 0.3),
+                0 24px 48px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    transition: all 0.3s ease;
+  }
+
+  .glass-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2),
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                0 0 25px rgba(16, 185, 129, 0.8),
+                0 0 50px rgba(16, 185, 129, 0.6),
+                0 0 75px rgba(16, 185, 129, 0.4),
+                0 0 100px rgba(16, 185, 129, 0.2);
+    transform: translateY(-4px);
+  }
+
+  .light .glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12),
+                0 16px 32px rgba(0, 0, 0, 0.08),
+                0 24px 48px rgba(0, 0, 0, 0.06),
+                0 0 0 1px rgba(0, 0, 0, 0.06) inset;
+  }
+
+  .light .glass-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1),
+                0 20px 40px rgba(0, 0, 0, 0.08),
+                0 0 25px rgba(16, 185, 129, 0.7),
+                0 0 50px rgba(16, 185, 129, 0.5),
+                0 0 75px rgba(16, 185, 129, 0.35),
+                0 0 100px rgba(16, 185, 129, 0.2);
+  }
+
+  @keyframes smoke {
+    0% {
+      opacity: 0;
+      transform: translateY(0) scale(0.8);
+    }
+    30% {
+      opacity: 0.9;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-60px) scale(2);
+    }
+  }
+
+  .animate-smoke {
+    animation: smoke 2.5s ease-out infinite;
+  }
+
+  .animate-smoke-delay-1 {
+    animation: smoke 2.5s ease-out 0.8s infinite;
+  }
+
+  .animate-smoke-delay-2 {
+    animation: smoke 2.5s ease-out 1.6s infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4),
+                  0 0 40px rgba(16, 185, 129, 0.2),
+                  0 0 60px rgba(16, 185, 129, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.8),
+                  0 0 60px rgba(16, 185, 129, 0.6),
+                  0 0 90px rgba(16, 185, 129, 0.4),
+                  0 0 120px rgba(16, 185, 129, 0.2);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+}
