@@ -1,0 +1,1109 @@
+{
+  "project": "KYSS Vision",
+  "branchName": "ralph/kyss-platform-build",
+  "description": "Transform LYNCKIWI (lead gen platform) into KYSS Vision (backpacker workforce placement platform). Read kyss_platform_flow_v2.md for business context, kyss_prd_v1.md for technical specs, and kyss_manus_transformation_prompt.md for file-by-file transformation instructions.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Cleanup: Delete all Lynck-specific files",
+      "description": "Remove all files that are specific to Lynck and won't be reused. This gives us a clean foundation.",
+      "acceptanceCriteria": [
+        "Delete pages: QuoteRequest.tsx, ServiceDetail.tsx, ServiceDetailOld.tsx.backup, ThankYou.tsx, ForBusinesses.tsx, Advertise.tsx, AdvertiseCreate.tsx, AdminAds.tsx, AdminAdDetail.tsx, Impressum.tsx, About.tsx",
+        "Delete components: ServiceRequestForm.tsx, ads/AdCarousel.tsx, ads/AdSidebar.tsx, PartnerLogo.tsx, PortfolioGrid.tsx, blog/BlogCTA.tsx",
+        "Delete data files: servicesData.ts, landingPageContent.ts, priceRanges.ts, partnerLogos.ts, networkMetrics.ts",
+        "Delete lib files: ads.ts",
+        "Delete all Lynck images from public/ (blog-*.jpg, service-*.jpg, hero-house.png, logo.png, logo-old.png, electrician.jpg, heating-hvac.jpg, general-renovation.jpg, plumbing-sanitary.png, roofing.jpg, solar-panel.jpg)",
+        "Delete all root markdown docs: ALTERNATIVE_TASKS.md, DATABASE_SETUP.md, EDGE_FUNCTION_DEPLOYMENT_GUIDE.md, LEAD_QUALITY_IMPROVEMENTS.md, PHASE_*.md, SECURITY_FIXES_SUMMARY.md, NETLIFY_DEPLOYMENT.md",
+        "Delete supabase/functions/create-lead/ directory",
+        "Delete all files in supabase/migrations/",
+        "Project still compiles after removing unused imports from App.tsx (comment out deleted route imports for now)",
+        "Typecheck passes: npm run build"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "First step \u2014 clean slate. App.tsx will have broken imports; comment them out temporarily. We'll rebuild routes in US-010."
+    },
+    {
+      "id": "US-002",
+      "title": "Rebrand: Global find-and-replace Lynck to KYSS",
+      "description": "Replace all Lynck branding with KYSS Vision branding across the entire codebase.",
+      "acceptanceCriteria": [
+        "Find and replace globally: 'Lynck Services' \u2192 'KYSS Vision', 'Lynck' \u2192 'KYSS', 'LYNCK' \u2192 'KYSS', 'lynck' \u2192 'kyss'",
+        "Update index.html: title to 'KYSS Vision \u2014 Find Farm Work in New Zealand & Australia', meta description updated for KYSS",
+        "Update package.json: name to 'kyss-vision'",
+        "Update .env.example: variable names reference KYSS",
+        "Remove all German-language meta tags from index.html",
+        "Add placeholder favicon: create a simple gold circle SVG with 'K' as favicon",
+        "npm run build passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Pure text replacement and branding. No structural changes."
+    },
+    {
+      "id": "US-003",
+      "title": "Rebrand: Update Tailwind color system to gold/amber accent",
+      "description": "Replace Lynck's green/emerald accent with KYSS gold/amber throughout the design system.",
+      "acceptanceCriteria": [
+        "Update tailwind.config.ts: primary color changed to gold/amber (#F5A623 base, full ramp from 50-900)",
+        "Keep emerald (#10b981) as secondary color for verified badges and success states",
+        "Update any hardcoded green accent colors in src/index.css or src/App.css to gold/amber",
+        "Verify dark theme backgrounds remain as-is (#0a0a0a to #141414 range)",
+        "npm run build passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Color system only. The components will pick up new colors automatically via Tailwind config."
+    },
+    {
+      "id": "US-004",
+      "title": "Remove German language system",
+      "description": "Remove the DE/EN bilingual system. KYSS is English-only for MVP.",
+      "acceptanceCriteria": [
+        "Delete src/contexts/LanguageContext.tsx",
+        "Remove LanguageProvider wrapper from App.tsx",
+        "Search all files for useLanguage hook calls and remove them, replacing with English-only strings",
+        "Remove language toggle from Navigation.tsx",
+        "Remove any { de: '...', en: '...' } structures \u2014 keep only the English value",
+        "npm run build passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "This will touch many files. Be thorough \u2014 search for 'useLanguage', 'LanguageContext', 'language', 'de:', 'nameDe', 'titleDe', 'descriptionDe'."
+    },
+    {
+      "id": "US-005",
+      "title": "Database: Create KYSS Supabase schema \u2014 enums and core tables",
+      "description": "Create the new Supabase migration with all KYSS enums and the core user/profile tables.",
+      "acceptanceCriteria": [
+        "Create supabase/migrations/001_kyss_schema.sql",
+        "Create all enums: user_role, user_status, visa_type, experience_level, accommodation_pref, pay_type, pool_status, membership_status, review_type, report_reason, report_status, notification_type",
+        "Create table: user_profiles (id, user_id references auth.users, role, name, nationality, profile_photo_url, country, phone, status, last_login_at, timestamps)",
+        "Create table: worker_profiles (all fields from PRD section 3 \u2014 visa, preferences, availability, emergency contact, profile_complete, manus_prospect_id)",
+        "Create table: employer_profiles (business_name, region, country, logo_url, description, verified, timestamps)",
+        "Create table: work_type_categories (name, slug unique, icon, description, display_order, active)",
+        "All tables have UUID primary keys with gen_random_uuid()",
+        "All tables have created_at TIMESTAMPTZ DEFAULT now()",
+        "Appropriate foreign keys and indexes created",
+        "Migration runs successfully against Supabase"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "See kyss_prd_v1.md Section 3 for exact field definitions. Use PostgreSQL native types."
+    },
+    {
+      "id": "US-006",
+      "title": "Database: Create work pools and pool membership tables",
+      "description": "Create the work_pools and pool_memberships tables \u2014 the core engine of KYSS.",
+      "acceptanceCriteria": [
+        "Create supabase/migrations/002_pools_schema.sql",
+        "Create table: work_pools (all fields from PRD \u2014 employer_id, work_type_category_id, title, region, country, location, season dates, pay, hours, physical requirements, accommodation fields, transport fields, contract_url, induction_video_url, max_capacity, current_count, status, auto_close_at_capacity, created_by, timestamps)",
+        "Create table: pool_memberships (worker_id, pool_id, status enum, added_by nullable, joined_at, left_at, UNIQUE constraint on worker_id+pool_id)",
+        "Foreign keys: work_pools.employer_id \u2192 employer_profiles.id, work_pools.work_type_category_id \u2192 work_type_categories.id, work_pools.created_by \u2192 auth.users(id)",
+        "Foreign keys: pool_memberships.worker_id \u2192 auth.users(id), pool_memberships.pool_id \u2192 work_pools.id",
+        "Indexes on: work_pools(work_type_category_id), work_pools(employer_id), work_pools(status), work_pools(country), pool_memberships(worker_id), pool_memberships(pool_id)",
+        "Migration runs successfully"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "See PRD Section 3 for exact field types. pool_status enum: open, almost_full, closed, archived."
+    },
+    {
+      "id": "US-007",
+      "title": "Database: Create communication tables (feed, messages, notifications)",
+      "description": "Create tables for pool feed posts, messaging, and notifications.",
+      "acceptanceCriteria": [
+        "Create supabase/migrations/003_communication_schema.sql",
+        "Create table: pool_posts (pool_id, author_id, content text max 2000, pinned boolean, timestamps)",
+        "Create table: pool_post_comments (post_id, author_id, content text max 500, timestamps)",
+        "Create table: conversations (participant_ids uuid[], pool_id nullable, last_message_at, timestamps)",
+        "Create table: messages (conversation_id, sender_id, content text max 2000, read boolean default false, timestamps)",
+        "Create table: notifications (user_id, type notification_type enum, title, body, read boolean default false, data jsonb, timestamps)",
+        "All foreign keys and indexes created",
+        "Migration runs successfully"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Database: Create reviews, reports, admin log, and prospects tables",
+      "description": "Create remaining tables for reviews, safety, admin tracking, and Manus pipeline.",
+      "acceptanceCriteria": [
+        "Create supabase/migrations/004_remaining_schema.sql",
+        "Create table: reviews (reviewer_id, reviewee_id, pool_id, review_type enum, rating 1-5, text max 1000, UNIQUE on reviewer_id+pool_id, timestamps)",
+        "Create table: reports (reporter_id, reported_id, reason enum, description, status enum, admin_notes, actioned_by, timestamps)",
+        "Create table: admin_actions (admin_id, action_type text, target_type text, target_id uuid, details jsonb, timestamps)",
+        "Create table: prospects (name, facebook_url, source_group, nationality, visa_confirmed, start_date_confirmed, work_type_interest, region_interest, dm_sent, dm_sent_at, dm_replied, dm_replied_at, platform_signed_up, signed_up_at, user_id nullable, pool_joined, pool_joined_at, notes, timestamps)",
+        "Migration runs successfully"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Database: Seed work type categories and create RLS policies",
+      "description": "Insert the 9 work type categories and set up Row Level Security.",
+      "acceptanceCriteria": [
+        "Create supabase/migrations/005_seed_and_rls.sql",
+        "Insert 9 work type categories: Fruit Picking, Packing & Processing, Pruning, Thinning, Vineyard, Dairy & Farming, Hospitality, Construction, Horticulture \u2014 with slugs, icons, descriptions, and display_order 1-9",
+        "Enable RLS on ALL tables",
+        "Create RLS policies: workers can read own profile, update own profile",
+        "Workers can read work_type_categories and work_pools (where status != 'archived')",
+        "Workers can insert pool_memberships for themselves (join pools)",
+        "Workers can read pool_posts and comments for pools they are members of",
+        "Employers can read/update their own employer_profile",
+        "Employers can read pool_memberships for their own pools",
+        "Employers can create pool_posts for their own pools",
+        "Admin role can read/write all tables (create a policy using user_profiles.role = 'admin')",
+        "Public can read work_type_categories (for landing page)",
+        "Migration runs successfully"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "RLS is critical for security. Test that unauthorized access is properly blocked."
+    },
+    {
+      "id": "US-010",
+      "title": "Regenerate Supabase types and update client",
+      "description": "Update the Supabase TypeScript types to match the new schema.",
+      "acceptanceCriteria": [
+        "Regenerate src/integrations/supabase/types.ts from new schema (run supabase gen types or manually update the type file to match all new tables)",
+        "Verify src/integrations/supabase/client.ts still works with new types",
+        "Export all new table types for use in components",
+        "npm run build passes (may have import errors from deleted files \u2014 fix any remaining broken imports in App.tsx)"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "If you can't run supabase gen types, manually write the TypeScript types matching the SQL schema."
+    },
+    {
+      "id": "US-011",
+      "title": "Auth: Create AuthContext with three-role support",
+      "description": "Replace LanguageContext with AuthContext that supports worker/employer/admin roles.",
+      "acceptanceCriteria": [
+        "Create src/contexts/AuthContext.tsx",
+        "Provides: user (from Supabase auth), userProfile (from user_profiles table), role ('worker'|'employer'|'admin'|null), isLoading, isAuthenticated",
+        "Provides functions: signIn(email, password), signUp(email, password, name, role, country), signOut()",
+        "On auth state change, fetch user_profiles row to get role",
+        "signUp creates both auth.users entry AND user_profiles row with role",
+        "Wrap app with AuthProvider in App.tsx (replacing old LanguageProvider)",
+        "npm run build passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": "This is the foundation for all protected routes. Keep it clean and simple."
+    },
+    {
+      "id": "US-012",
+      "title": "Auth: Create Sign Up page",
+      "description": "Build the sign-up page for workers and employers.",
+      "acceptanceCriteria": [
+        "Create src/pages/auth/SignUp.tsx",
+        "Form fields: Full name, Email, Password (min 8 chars), Country (NZ/AU/Both radio), Role (Worker/Employer radio, default Worker), Terms checkbox",
+        "Client-side validation on all fields",
+        "On submit: calls AuthContext.signUp, handles errors, shows loading state",
+        "After successful sign-up: redirect worker to /profile/edit, redirect employer to /employer/profile",
+        "Link to sign-in page: 'Already have an account? Sign in'",
+        "Uses existing shadcn/ui form components (Input, RadioGroup, Checkbox, Button)",
+        "Dark theme, gold accent on primary CTA button",
+        "npm run build passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Auth: Create Sign In page and update ProtectedRoute",
+      "description": "Build the sign-in page and update route protection for three roles.",
+      "acceptanceCriteria": [
+        "Create src/pages/auth/SignIn.tsx (replaces AdminLogin.tsx functionality)",
+        "Form fields: Email, Password, [Sign In] button",
+        "After sign-in: redirect based on role \u2014 worker \u2192 /dashboard, employer \u2192 /employer/dashboard, admin \u2192 /admin",
+        "Link to sign-up: 'Don't have an account? Get started'",
+        "Update src/components/ProtectedRoute.tsx to accept requiredRole prop",
+        "ProtectedRoute checks: if not authenticated \u2192 redirect to /auth/sign-in",
+        "ProtectedRoute checks: if authenticated but wrong role \u2192 redirect to correct dashboard",
+        "Delete AdminLogin.tsx",
+        "npm run build passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Data: Create work type categories data file and region data",
+      "description": "Create the static data files that replace Lynck's servicesData.",
+      "acceptanceCriteria": [
+        "Create src/data/workTypeCategoriesData.ts with WorkTypeCategory type and array of 9 categories (id, slug, name, icon, description, imagePath)",
+        "Create src/data/regionsData.ts with nzRegions (16 regions) and auRegions (8 regions) arrays",
+        "Create src/data/landingContent.ts with all KYSS landing page copy in English: hero headlines/subheadlines, trust badges, features/why-kyss content, how-it-works 4 steps, 6 testimonials, stats, CTA content",
+        "Export all types and data",
+        "npm run build passes"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": "See kyss_manus_transformation_prompt.md Phase 7 for exact content. See kyss_transformation_blueprint.md for testimonial text."
+    },
+    {
+      "id": "US-015",
+      "title": "Lib: Rewrite database.ts with KYSS functions",
+      "description": "Replace all Lynck database functions with KYSS-specific Supabase queries.",
+      "acceptanceCriteria": [
+        "Completely rewrite src/lib/database.ts",
+        "Add functions for categories: getCategories(), getCategoryBySlug(slug), getCategoryPoolCounts(country?)",
+        "Add functions for pools: getPools(filters), getPoolsByCategory(categorySlug, filters), getPoolById(poolId), joinPool(poolId), leavePool(poolId), getRecommendedPools(userId)",
+        "Add functions for pool feed: getPoolPosts(poolId), createPoolPost(poolId, content), pinPoolPost(postId, pinned)",
+        "Add functions for worker profile: getWorkerProfile(userId), updateWorkerProfile(userId, data), checkProfileComplete(userId)",
+        "Add functions for employer: getEmployerProfile(userId), getEmployerPools(employerId)",
+        "Add functions for messaging: getConversations(userId), getMessages(conversationId), sendMessage(conversationId, content)",
+        "Add functions for notifications: getNotifications(userId), markNotificationRead(id), getUnreadCount(userId)",
+        "Add admin functions: adminGetWorkers(filters), adminGetPools(filters), adminCreatePool(data), adminUpdatePoolStatus(poolId, status), adminAddWorkerToPool(workerId, poolId), adminRemoveWorkerFromPool(workerId, poolId), adminGetDashboardStats()",
+        "All functions use the Supabase client from src/integrations/supabase/client.ts",
+        "All functions have proper TypeScript return types",
+        "npm run build passes"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": "This is a large file but it's all Supabase query functions. No UI. See PRD Section 5 for the full API endpoint list \u2014 each endpoint maps to a function here."
+    },
+    {
+      "id": "US-016",
+      "title": "Lib: Update auth.ts and create categoryIcons.tsx",
+      "description": "Update auth utilities and create icon mapping for work type categories.",
+      "acceptanceCriteria": [
+        "Rewrite src/lib/auth.ts: signIn, signUp (creates auth user + user_profiles row), signOut, getCurrentUser, getUserRole functions using Supabase Auth",
+        "Rename src/lib/serviceIcons.tsx to src/lib/categoryIcons.tsx",
+        "Map work type category icon names to lucide-react icons: apple, package, scissors, leaf, grape, milk (or cow equivalent), hotel, hard-hat, sprout",
+        "Export a getCategoryIcon(iconName: string) function that returns the React component",
+        "npm run build passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Component: Transform Navigation for public/worker/employer views",
+      "description": "Update the main navigation component to handle three states: public, worker logged in, employer logged in.",
+      "acceptanceCriteria": [
+        "Rewrite src/components/Navigation.tsx",
+        "PUBLIC state (not logged in): KYSS Logo | How It Works | Guide | Blog | For Employers | [Sign In] text button | [Get Started \u2192] gold filled button",
+        "WORKER state (logged in): KYSS Logo | Search | Guide | Blog | Notification bell with unread count badge | Profile avatar dropdown (Dashboard, My Pools, Messages, Settings, Sign Out)",
+        "EMPLOYER state (logged in): KYSS Logo | Search | Notification bell | Profile avatar dropdown (Dashboard, Pool Management, Messages, Settings, Sign Out)",
+        "ADMIN state: minimal nav \u2014 admin uses sidebar layout instead",
+        "Uses AuthContext to determine current state",
+        "Mobile responsive: hamburger menu on small screens",
+        "Dark theme with gold accent on active items and CTA buttons",
+        "npm run build passes"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": "Use existing shadcn/ui NavigationMenu, DropdownMenu, and Sheet components."
+    },
+    {
+      "id": "US-018",
+      "title": "Component: Transform Footer for KYSS",
+      "description": "Update the footer with KYSS content and links.",
+      "acceptanceCriteria": [
+        "Rewrite src/components/Footer.tsx",
+        "4 columns: KYSS Vision + tagline | Work Types (9 links) | Company (About, Blog, Guide, For Employers, Contact) | Legal (Privacy, Terms, Cookies)",
+        "Countries row: NZ flag + 'New Zealand' | AU flag + 'Australia'",
+        "Social links: Instagram, TikTok, Facebook (use lucide-react icons)",
+        "Copyright: '\u00a9 2026 KYSS Vision. All rights reserved.'",
+        "Dark theme consistent with existing footer styling",
+        "npm run build passes"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Component: Transform HeroSection for KYSS landing page",
+      "description": "Rebuild the hero section for the KYSS landing page.",
+      "acceptanceCriteria": [
+        "Rewrite src/components/HeroSection.tsx",
+        "Headline: 'Find Farm Work Across New Zealand & Australia'",
+        "Subheadline: 'Join verified backpackers already matched with seasonal employers. Safe, fast, and built for travelers.'",
+        "Two gold CTA buttons: '\ud83c\uddf3\ud83c\uddff Explore New Zealand' and '\ud83c\udde6\ud83c\uddfa Explore Australia' \u2014 both link to /auth/sign-up with country query param",
+        "Trust badges row: 'Verified Employers' | '100% Free for Workers' | '24h Average Match Time' \u2014 with checkmark/shield/clock icons",
+        "Background: use a placeholder gradient or solid dark color (no image required for now)",
+        "Remove all Lynck-specific content (house image, service icons overlay, contractor copy)",
+        "Dark theme, responsive",
+        "npm run build passes"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-020",
+      "title": "Component: Transform FeaturesSection and WhyChooseUs",
+      "description": "Update the 'Why KYSS?' and 'How It Works' sections for the landing page.",
+      "acceptanceCriteria": [
+        "Rewrite src/components/FeaturesSection.tsx as 'Why KYSS?' section with 3 value props: Verified Employers (checkmark icon), Built for Safety (shield icon), Instant Matching (zap icon) \u2014 each with title and description text from landingContent.ts",
+        "Rewrite src/components/WhyChooseUs.tsx as 'How It Works' section with 4 numbered step cards: Create Your Profile, Browse Work Pools, Join a Pool, Start Working \u2014 keep the numbered card layout from Lynck but update content",
+        "Both sections use gold accent for icons/numbers",
+        "Dark theme, responsive",
+        "npm run build passes"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Component: Transform TestimonialsSection for KYSS",
+      "description": "Update testimonials with KYSS backpacker and employer reviews.",
+      "acceptanceCriteria": [
+        "Rewrite src/components/TestimonialsSection.tsx",
+        "6 review cards: 3 from workers (Sophie L./France, Kenji T./Japan, Laura M./Germany) and 3 from employers (Bay Gold Orchards, Hawke's Bay Vineyards, Suncoast Farms)",
+        "Each card: initials avatar (colored circle), name, role + location, 5 star rating, review text, gold tag (e.g., 'Matched in 48 hours', '40 Workers Hired')",
+        "Keep the existing card grid layout, swap green tags for gold tags",
+        "Stats bar below testimonials: 'Workers Matched' | 'Verified Employers' | 'Avg Rating' | 'Avg Match Time'",
+        "npm run build passes"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": "Use testimonial content from kyss_transformation_blueprint.md"
+    },
+    {
+      "id": "US-022",
+      "title": "Component: Create CategoryCard and CategoryGrid for work type display",
+      "description": "Build the work type category card component used on landing page and find-work page.",
+      "acceptanceCriteria": [
+        "Create src/components/categories/CategoryCard.tsx \u2014 displays: icon (from categoryIcons), name, description, open pool count badge, total pool count. Click navigates to /find-work/[slug] (if logged in) or /auth/sign-up (if not)",
+        "Create src/components/categories/CategoryGrid.tsx \u2014 renders 3x3 grid of CategoryCards (3 cols desktop, 2 tablet, 1 mobile)",
+        "Cards use dark theme styling (#1a1a1a bg, #2a2a2a border, rounded-xl, gold accent on hover)",
+        "Pool counts are passed as props (will be fetched from DB later, use 0 as default)",
+        "npm run build passes"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": "This component is reused in both the public landing page (/work types section) and the logged-in /find-work page."
+    },
+    {
+      "id": "US-023",
+      "title": "Component: Create ContactSection (CTA) for KYSS",
+      "description": "Update the bottom CTA section of the landing page.",
+      "acceptanceCriteria": [
+        "Rewrite src/components/ContactSection.tsx",
+        "Headline: 'Ready to Start Your Next Adventure?'",
+        "Subtitle: 'Join thousands of backpackers finding safe, verified seasonal work.'",
+        "Two CTA buttons: [Create Your Free Profile \u2192] gold primary | [I'm an Employer \u2192] outlined secondary",
+        "Both link to /auth/sign-up (with role query param for employer)",
+        "npm run build passes"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Page: Rebuild Index.tsx (landing page) with all KYSS sections",
+      "description": "Assemble the complete KYSS landing page from transformed components.",
+      "acceptanceCriteria": [
+        "Rewrite src/pages/Index.tsx",
+        "Sections in order: Navigation \u2192 HeroSection \u2192 CategoryGrid (work types, using static data for now) \u2192 FeaturesSection (Why KYSS) \u2192 WhyChooseUs (How It Works) \u2192 TestimonialsSection \u2192 ContactSection (CTA) \u2192 Footer",
+        "Remove all Lynck-specific sections (ad sidebar, service icon overlays, etc.)",
+        "Page is fully responsive and looks polished in dark theme",
+        "All internal links work (/auth/sign-up, /blog, /guide, etc. \u2014 pages may not exist yet, but links should be correct)",
+        "npm run build passes"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": "This is the public-facing marketing page. It should look professional and complete."
+    },
+    {
+      "id": "US-025",
+      "title": "Routing: Set up complete App.tsx route structure",
+      "description": "Configure all routes for public, worker, employer, and admin sections.",
+      "acceptanceCriteria": [
+        "Rewrite src/App.tsx with the complete route structure from kyss_manus_transformation_prompt.md Phase 5",
+        "Public routes: /, /how-it-works, /for-employers, /guide, /blog, /blog/:slug, /work/:categorySlug, /auth/sign-up, /auth/sign-in, /privacy, /terms, /cookies",
+        "Worker routes (ProtectedRoute requiredRole='worker'): /dashboard, /find-work, /find-work/:categorySlug, /pool/:poolId, /my-pools, /messages, /notifications, /profile, /profile/edit, /settings",
+        "Employer routes (ProtectedRoute requiredRole='employer'): /employer/dashboard, /employer/pool/:poolId, /employer/messages, /employer/notifications, /employer/profile, /employer/settings",
+        "Admin routes (ProtectedRoute requiredRole='admin'): /admin, /admin/workers, /admin/workers/:id, /admin/employers, /admin/pools, /admin/pools/create, /admin/pools/:id, /admin/flagged, /admin/analytics/*, /admin/prospects, /admin/activity-log, /admin/blog, /admin/guide",
+        "All routes lazy-loaded with Suspense and PageLoader fallback",
+        "Create placeholder pages for routes that don't have real pages yet (simple component with page title)",
+        "npm run build passes"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": "Create minimal placeholder components for pages not yet built. We'll flesh them out in subsequent stories."
+    },
+    {
+      "id": "US-026",
+      "title": "Layout: Create WorkerSidebar component",
+      "description": "Build the sidebar navigation for logged-in workers.",
+      "acceptanceCriteria": [
+        "Create src/components/WorkerSidebar.tsx",
+        "Sections: MAIN (Dashboard, Find Work, My Pools with count badge, Messages with unread dot, Notifications with count), RESOURCES (Guide, Blog, Seasonal Calendar), MY POOLS (list of joined pools with quick links), bottom (Profile, Settings, Sign Out)",
+        "Active item: gold/amber pill highlight background with dark text",
+        "Hover: subtle lighter background",
+        "Icons: use lucide-react (Home, Search, Clipboard, MessageSquare, Bell, BookOpen, PenTool, Calendar, User, Settings, LogOut)",
+        "Collapsible on mobile (slide-in overlay triggered by hamburger menu)",
+        "Dark theme (#0d0d0d to #141414 bg, light gray text, muted labels)",
+        "npm run build passes"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": "Reference the NovaCast sidebar screenshot for styling. Gold active state is key."
+    },
+    {
+      "id": "US-027",
+      "title": "Layout: Create WorkerLayout and EmployerLayout wrapper components",
+      "description": "Build layout wrappers that include sidebar + header for logged-in users.",
+      "acceptanceCriteria": [
+        "Create src/components/WorkerLayout.tsx \u2014 sidebar (WorkerSidebar) on left + main content area on right + top nav (simplified Navigation with bell + avatar)",
+        "Create src/components/EmployerSidebar.tsx \u2014 employer-specific sidebar (Dashboard, My Pools, Messages, Notifications, Pool Management section, Profile, Settings, Sign Out)",
+        "Create src/components/EmployerLayout.tsx \u2014 EmployerSidebar + main content area",
+        "Both layouts responsive: sidebar hidden on mobile, toggled via hamburger menu",
+        "Main content area scrollable, sidebar fixed",
+        "npm run build passes"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-028",
+      "title": "Layout: Update AdminLayout and AdminSidebar for KYSS",
+      "description": "Transform the existing admin layout to match KYSS admin sidebar spec.",
+      "acceptanceCriteria": [
+        "Update src/components/AdminLayout.tsx",
+        "Update or replace src/components/Sidebar.tsx with AdminSidebar",
+        "Admin sidebar sections: OVERVIEW (Dashboard), MANAGEMENT (Workers with count, Employers with count, Work Pools with count, Flagged Content with count), ANALYTICS (Workers, Employers, Pools, Funnel, Revenue), TOOLS (Bulk Messaging, Prospect Pipeline, Activity Log), CONTENT (Blog Manager, Guide Editor), bottom (Platform Settings, Sign Out)",
+        "Same styling pattern as WorkerSidebar (dark theme, gold active state)",
+        "npm run build passes"
+      ],
+      "priority": 28,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-029",
+      "title": "Component: Create PoolCard for pool listings",
+      "description": "Build the pool card component used in category listings.",
+      "acceptanceCriteria": [
+        "Create src/components/pools/PoolCard.tsx",
+        "Displays: status badge (green OPEN / amber ALMOST FULL / red FULL), employer name, region, employer rating (stars + count), pay rate + type, hours, accommodation indicator, transport indicator, capacity progress bar (X/Y spots filled), [View & Join Pool \u2192] button (for open) or [View Pool] grayed out (for closed)",
+        "Create src/components/pools/StatusBadge.tsx \u2014 colored badge for pool status",
+        "Create src/components/pools/CapacityBar.tsx \u2014 visual progress bar showing filled/total spots",
+        "Dark card styling, responsive",
+        "npm run build passes"
+      ],
+      "priority": 29,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-030",
+      "title": "Page: Build FindWork page (work type category grid)",
+      "description": "Create the main 'Find Work' page showing the 9 work type category cards.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/FindWork.tsx",
+        "Access control: redirect to /profile/edit if worker profile is not complete",
+        "Country toggle at top: NZ | AU | Both (defaults to worker's country setting)",
+        "Uses CategoryGrid component to display 9 work type category cards",
+        "Each card shows live pool counts fetched from Supabase (open pools in that category for selected country)",
+        "Wrapped in WorkerLayout (sidebar + nav)",
+        "Page title: 'Find Work' with subtitle 'Choose a work type to see available pools'",
+        "npm run build passes"
+      ],
+      "priority": 30,
+      "passes": false,
+      "notes": "This is the first page workers see after completing their profile."
+    },
+    {
+      "id": "US-031",
+      "title": "Page: Build CategoryPools page (pools within a category)",
+      "description": "Create the page showing all pools within a selected work type category.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/CategoryPools.tsx",
+        "Reads :categorySlug from URL params",
+        "Back button: '\u2190 Back to Work Types' \u2192 /find-work",
+        "Category title + icon + description at top",
+        "Country toggle: NZ | AU | Both",
+        "Filters: Region (multi-select), Pay range (slider), Accommodation (Yes/No/Any), Transport (Yes/No/Any), Status (Open & Almost Full / All)",
+        "Sort dropdown: Relevance (default), Newest, Pay highest, Most spots",
+        "Pool list: OPEN pools first, then ALMOST_FULL, then CLOSED (grayed out)",
+        "Uses PoolCard component for each pool",
+        "Fetches pools from Supabase filtered by category",
+        "Wrapped in WorkerLayout",
+        "npm run build passes"
+      ],
+      "priority": 31,
+      "passes": false,
+      "notes": "This is the critical navigation step: Category \u2192 Pools. Open pools joinable, closed pools visible but grayed out."
+    },
+    {
+      "id": "US-032",
+      "title": "Page: Build PoolDetail page with About tab",
+      "description": "Create the pool detail page \u2014 the core page where workers view pool info and join.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/PoolDetail.tsx",
+        "Pool header: employer logo + name, region, status badge, capacity bar, employer rating, [JOIN THIS POOL] gold button",
+        "If worker already a member: show '\u2705 You're in this pool' + [Leave Pool] link",
+        "If pool closed: show 'This pool is currently full' (no button)",
+        "Tab 1 \u2014 About (default): work type, season dates, pay rate, hours, physical requirements, accommodation section (available/details/cost), transport section (available/details/cost), documents ([Download Contract] if exists, [Watch Induction Video] if exists), employer description",
+        "Tabs 2 (Feed) and 3 (Reviews) can be placeholder content for now",
+        "Fetches pool data from Supabase by pool ID",
+        "Wrapped in WorkerLayout",
+        "npm run build passes"
+      ],
+      "priority": 32,
+      "passes": false,
+      "notes": "The join button logic will be implemented in the next story."
+    },
+    {
+      "id": "US-033",
+      "title": "Feature: Implement pool join and leave flow",
+      "description": "Build the join/leave logic with all validations from the PRD.",
+      "acceptanceCriteria": [
+        "Create src/components/pools/PoolJoinModal.tsx \u2014 confirmation dialog showing pool name, work type, start date, pay rate, and confirm/cancel buttons",
+        "On confirm: create pool_membership (status: active, added_by: null), increment pool.current_count, check capacity thresholds (90% \u2192 almost_full, 100% \u2192 closed if auto_close)",
+        "Validations before join: profile must be complete, visa not expired, visa expiry >= pool.season_start, not already a member, pool must be open or almost_full",
+        "Show appropriate error messages for each validation failure",
+        "Leave flow: confirmation dialog \u2192 update membership status to 'left', decrement pool.current_count, recalculate pool status",
+        "After join: redirect to pool page with 'You're in this pool' state",
+        "Create notification for employer on join: 'New worker: [name] joined [pool]'",
+        "npm run build passes"
+      ],
+      "priority": 33,
+      "passes": false,
+      "notes": "See PRD Section 7 for all edge cases and validation rules. Use database-level locking for race condition protection."
+    },
+    {
+      "id": "US-034",
+      "title": "Page: Build Pool Feed tab",
+      "description": "Implement the pool feed tab where employers post updates and workers comment.",
+      "acceptanceCriteria": [
+        "Add Feed tab content to PoolDetail.tsx",
+        "Fetch pool_posts for this pool, ordered by pinned first then newest",
+        "Each post shows: author avatar + name, timestamp, content, pin indicator, comment count",
+        "Expand comments inline on click (newest first)",
+        "Workers can add comments (text input, max 500 chars, submit button)",
+        "Only pool members can see and interact with the feed",
+        "Non-members see: 'Join this pool to access the feed'",
+        "npm run build passes"
+      ],
+      "priority": 34,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-035",
+      "title": "Page: Build Pool Reviews tab",
+      "description": "Implement the reviews tab on the pool detail page.",
+      "acceptanceCriteria": [
+        "Add Reviews tab content to PoolDetail.tsx",
+        "Fetch reviews for this pool where review_type = 'worker_rates_employer'",
+        "Show average rating at top (only if 3+ reviews, otherwise 'Not enough reviews yet')",
+        "Each review: reviewer name, nationality flag, star rating (1-5), review text, date",
+        "If pool season is completed: show 'Leave a review' button for members who haven't reviewed yet",
+        "Review form: 1-5 star selector + text area (max 1000 chars) + submit",
+        "npm run build passes"
+      ],
+      "priority": 35,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-036",
+      "title": "Page: Build Worker Profile Wizard (6-step form)",
+      "description": "Create the multi-step profile completion wizard for new workers.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/ProfileWizard.tsx",
+        "Progress bar at top showing current step and completion %",
+        "Step 1 \u2014 Personal Info: nationality dropdown, phone, languages multi-select",
+        "Step 2 \u2014 Visa: visa type dropdown, file upload (PDF/JPG/PNG, max 10MB), expiry date picker. Validation: expiry must be future",
+        "Step 3 \u2014 Work Preferences: work type checkboxes (from categories), region multi-select (filtered by country), availability start/end dates, experience level radio",
+        "Step 4 \u2014 Logistics: own transport (Yes/No), accommodation preference radio",
+        "Step 5 \u2014 Photo & Bio: profile photo upload (JPG/PNG, max 5MB), bio textarea (max 500 chars)",
+        "Step 6 \u2014 Emergency Contact: name, phone with country code, relationship dropdown",
+        "Each step auto-saves on 'Next' (updates worker_profiles in Supabase)",
+        "On final submit: set profile_complete = true, redirect to /find-work",
+        "Success toast: 'Profile complete! Browse open work pools below.'",
+        "Uses shadcn/ui form components throughout",
+        "npm run build passes"
+      ],
+      "priority": 36,
+      "passes": false,
+      "notes": "This is a large page. Use a step state machine (useState for currentStep). Each step is a sub-component."
+    },
+    {
+      "id": "US-037",
+      "title": "Page: Build Worker Dashboard",
+      "description": "Create the main dashboard workers see after logging in.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/Dashboard.tsx",
+        "Top row \u2014 3 stat cards: Pools Joined (count), Unread Messages (count), Profile Status (\u2705 Complete or progress %)",
+        "Section: Recommended Pools \u2014 3-5 PoolCards matching worker preferences, only open/almost_full pools they haven't joined",
+        "Section: My Pool Updates \u2014 latest 5 pool feed posts from joined pools (combined feed, newest first)",
+        "Section: Recent Messages \u2014 3 most recent conversations with unread indicator",
+        "Wrapped in WorkerLayout",
+        "npm run build passes"
+      ],
+      "priority": 37,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-038",
+      "title": "Page: Build MyPools page",
+      "description": "Create the page showing all pools the worker has joined.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/MyPools.tsx",
+        "List of pools where the worker has an active pool_membership",
+        "Each pool shown as a PoolCard with 'View Pool' button",
+        "Empty state: 'You haven't joined any pools yet. Browse open pools \u2192' with link to /find-work",
+        "Wrapped in WorkerLayout",
+        "npm run build passes"
+      ],
+      "priority": 38,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-039",
+      "title": "Feature: Build Messaging system (conversations + chat)",
+      "description": "Create the messaging UI for 1:1 conversations between workers and employers.",
+      "acceptanceCriteria": [
+        "Create src/components/messaging/ConversationList.tsx \u2014 list of conversations with participant avatar + name, last message preview, timestamp, unread dot",
+        "Create src/components/messaging/ChatBubble.tsx \u2014 message bubble (left=other, right=self, with timestamp)",
+        "Create src/components/messaging/ChatInput.tsx \u2014 textarea + send button",
+        "Create src/pages/worker/Messages.tsx \u2014 two-pane layout: ConversationList on left, chat thread on right",
+        "Fetch conversations and messages from Supabase",
+        "Send message: insert into messages table, update conversation.last_message_at",
+        "Mark messages as read when conversation is opened",
+        "Wrapped in WorkerLayout",
+        "npm run build passes"
+      ],
+      "priority": 39,
+      "passes": false,
+      "notes": "This component is shared between worker and employer. The page wrapper differs but the components are the same."
+    },
+    {
+      "id": "US-040",
+      "title": "Feature: Build Notifications system",
+      "description": "Create the notification bell, dropdown, and full notifications page.",
+      "acceptanceCriteria": [
+        "Create src/components/notifications/NotificationBell.tsx \u2014 bell icon with unread count badge, dropdown showing latest 5 notifications + 'View all' link",
+        "Create src/components/notifications/NotificationItem.tsx \u2014 icon (based on type), title, body, timestamp, read/unread dot, clickable (navigates to relevant page)",
+        "Create src/pages/worker/Notifications.tsx \u2014 full list of notifications, newest first, 'Mark all as read' button",
+        "Integrate NotificationBell into Navigation.tsx for logged-in users",
+        "Fetch from notifications table, filtered by current user",
+        "npm run build passes"
+      ],
+      "priority": 40,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-041",
+      "title": "Page: Build Employer Dashboard",
+      "description": "Create the main dashboard for logged-in employers.",
+      "acceptanceCriteria": [
+        "Create src/pages/employer/Dashboard.tsx",
+        "Top stat cards: Total Workers in Pool(s), New Workers Today, Pool Status indicators, Unread Messages",
+        "Section: My Pool(s) \u2014 list of employer's pools with name, status badge, capacity bar, new worker count. Click \u2192 /employer/pool/:id",
+        "Section: Recent Pool Activity \u2014 latest joins/leaves (e.g., 'Sophie L. joined Bay Gold \u2014 Kiwifruit')",
+        "Section: Recent Messages \u2014 unread conversations",
+        "Wrapped in EmployerLayout",
+        "npm run build passes"
+      ],
+      "priority": 41,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-042",
+      "title": "Page: Build Employer Pool Management page",
+      "description": "Create the employer's pool management page with Workers/Feed/Settings tabs.",
+      "acceptanceCriteria": [
+        "Create src/pages/employer/PoolManage.tsx",
+        "Workers tab (default): search bar, table/list of all workers in pool (photo, name, nationality, start date, transport, accommodation, joined date), [Message] button per worker, [Download Roster CSV] export button",
+        "Feed tab: create new post (textarea + [Post] button), pin/unpin posts, see comments, respond to comments, delete own posts",
+        "Settings tab: edit pool description/hours/pay/accommodation/transport, upload/replace contract PDF, upload/replace induction video, view capacity",
+        "Wrapped in EmployerLayout",
+        "npm run build passes"
+      ],
+      "priority": 42,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-043",
+      "title": "Page: Build Admin Dashboard with KYSS stats",
+      "description": "Transform the existing admin dashboard to show KYSS platform stats.",
+      "acceptanceCriteria": [
+        "Rewrite src/pages/admin/Dashboard.tsx (replacing old AdminDashboard.tsx)",
+        "Top stat cards: Total Workers, Total Employers, Active Pools (open + almost_full), Billable Workers (sum of active memberships), New Sign-ups Today",
+        "Conversion funnel section: Manus DMs Sent \u2192 Replied \u2192 Profiles Created \u2192 Profiles Completed \u2192 Pools Joined (use placeholder data for now)",
+        "Recent activity feed: latest admin actions, new sign-ups, pool joins (last 20 entries)",
+        "Alerts panel: pools at capacity, workers with expiring visas (30 days), unresolved reports",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 43,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-044",
+      "title": "Page: Build Admin Workers list and detail",
+      "description": "Create the admin worker management pages.",
+      "acceptanceCriteria": [
+        "Create src/pages/admin/Workers.tsx \u2014 search bar, filters (country, status, profile complete, in pool, visa verified, nationality), table with columns: Name, Email, Nationality, Country, Visa Status, Profile %, Pools, Status, Actions dropdown",
+        "Actions dropdown per worker: View Profile, Send Message, Add to Pool, Move to Pool, Remove from Pool, Verify Visa, Flag/Warn, Suspend, Ban",
+        "Create src/pages/admin/WorkerDetail.tsx \u2014 full worker profile view + action buttons + pool membership history",
+        "Create src/components/admin/AddToPoolModal.tsx \u2014 modal with pool search/select to add worker to a pool (calls adminAddWorkerToPool)",
+        "Pagination or infinite scroll for worker list",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 44,
+      "passes": false,
+      "notes": "Transform patterns from existing AdminLeads.tsx and LeadsTable.tsx."
+    },
+    {
+      "id": "US-045",
+      "title": "Page: Build Admin Pools list, create, and detail",
+      "description": "Create admin pool management pages.",
+      "acceptanceCriteria": [
+        "Create src/pages/admin/Pools.tsx \u2014 search bar, filters (country, category, status), table: Pool Title, Employer, Category, Region, Capacity (X/Y), Status, Actions",
+        "Actions per pool: View, Edit, Open, Close, Archive, Add Worker, Duplicate",
+        "[+ Create Pool] button \u2192 /admin/pools/create",
+        "Create src/pages/admin/PoolCreate.tsx \u2014 form: select employer (searchable dropdown), pool title, work type category, region, country, season dates, pay rate/type, hours, physical requirements, accommodation toggle + details, transport toggle + details, contract upload, induction video upload, max capacity, initial status",
+        "Create src/pages/admin/PoolDetail.tsx \u2014 pool info + worker roster + manual add/remove workers + edit pool + change status",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 45,
+      "passes": false,
+      "notes": "The admin pool create form is the most important admin page \u2014 this is how you set up employers."
+    },
+    {
+      "id": "US-046",
+      "title": "Page: Build Admin Employers list and detail",
+      "description": "Create admin employer management pages.",
+      "acceptanceCriteria": [
+        "Create src/pages/admin/Employers.tsx \u2014 search, filter, table of all employers: Business Name, Region, Country, Pools, Workers, Verified, Actions",
+        "Actions: View, Verify, Send Message, Create Pool For, Suspend, Ban",
+        "Create src/pages/admin/EmployerDetail.tsx \u2014 employer profile + list of their pools + performance stats",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 46,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-047",
+      "title": "Page: Build Admin Revenue Tracking",
+      "description": "Create the revenue analytics page for admin.",
+      "acceptanceCriteria": [
+        "Create src/pages/admin/AnalyticsRevenue.tsx",
+        "Overview cards: Total Billable Workers, Revenue Rate ($1/hr), Estimated Daily Revenue, Estimated Weekly Revenue, Estimated Monthly Revenue",
+        "Per-employer breakdown table: Employer, Pool(s), Workers, Rate, Est. Daily Revenue",
+        "Per-pool breakdown table: Pool, Workers, Rate, Est. Daily Revenue",
+        "Charts: Workers over time (line chart), Revenue by employer (bar chart) \u2014 use recharts or chart.js (already in shadcn/ui deps)",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 47,
+      "passes": false,
+      "notes": "This is a critical business page \u2014 it shows exactly how much money the platform is generating."
+    },
+    {
+      "id": "US-048",
+      "title": "Page: Build Admin Prospects pipeline (Manus AI integration)",
+      "description": "Create the Manus AI prospect pipeline view for admin.",
+      "acceptanceCriteria": [
+        "Create src/pages/admin/Prospects.tsx",
+        "Table of prospects: Name, Facebook URL, Source Group, Nationality, Visa Confirmed, DM Sent, DM Replied, Signed Up, Pool Joined, Created At",
+        "Filters: DM status, signup status, pool joined status, source group",
+        "Bulk import: [Import CSV] button that uploads a CSV file and creates prospect rows",
+        "Edit individual prospect: update status fields, add notes",
+        "Funnel summary at top: total prospects \u2192 DM'd \u2192 replied \u2192 signed up \u2192 pool joined (with conversion percentages)",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 48,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-049",
+      "title": "Page: Build Admin Flagged Content queue",
+      "description": "Create the reports/flagged content review page for admin.",
+      "acceptanceCriteria": [
+        "Create src/pages/admin/Flagged.tsx",
+        "List of reports with status: PENDING first, then REVIEWED, then ACTIONED/DISMISSED",
+        "Each report shows: reporter name, reported user name, reason, description, date, status",
+        "Actions per report: Review (opens detail), Warn User, Suspend User, Ban User, Dismiss Report",
+        "Admin notes field: add notes when reviewing/actioning a report",
+        "All actions logged in admin_actions table",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 49,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-050",
+      "title": "Page: Build Admin Activity Log",
+      "description": "Create the admin action audit trail page.",
+      "acceptanceCriteria": [
+        "Create src/pages/admin/ActivityLog.tsx",
+        "Chronological list of all admin_actions, newest first",
+        "Each entry: admin name, action type (human-readable), target type + name, details, timestamp",
+        "Filters: action type, admin user, date range",
+        "Pagination (20 per page)",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 50,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-051",
+      "title": "Page: Create public ForEmployers landing page",
+      "description": "Build the employer-specific landing page explaining KYSS benefits for farms.",
+      "acceptanceCriteria": [
+        "Create src/pages/ForEmployers.tsx",
+        "Hero: 'Pre-Verified Workers, Delivered to Your Door' with subtitle about zero screening effort",
+        "How it works (employer version): 4 steps \u2014 We Create Your Pool \u2192 Workers Join Automatically \u2192 You See Your Roster Grow \u2192 Workers Show Up Ready",
+        "Benefits: Zero Screening, Verified Visas, Pool Feed Communication, Season After Season",
+        "Employer testimonials (3 cards from landingContent)",
+        "CTA: [Get Started as an Employer \u2192] \u2192 /auth/sign-up?role=employer",
+        "Uses Navigation + Footer",
+        "npm run build passes"
+      ],
+      "priority": 51,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-052",
+      "title": "Page: Create public HowItWorks page",
+      "description": "Build a dedicated how-it-works page with more detail than the landing page section.",
+      "acceptanceCriteria": [
+        "Create src/pages/HowItWorks.tsx",
+        "Two sections: 'For Workers' (4 detailed steps with descriptions) and 'For Employers' (4 detailed steps)",
+        "Visual step indicators (numbered, connected)",
+        "FAQ section at bottom (5-6 common questions)",
+        "CTA at bottom: [Create Your Free Profile \u2192] | [I'm an Employer \u2192]",
+        "Uses Navigation + Footer",
+        "npm run build passes"
+      ],
+      "priority": 52,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-053",
+      "title": "Page: Create Guide section (listing + article pages)",
+      "description": "Build the backpacker guide resource hub.",
+      "acceptanceCriteria": [
+        "Create src/pages/Guide.tsx \u2014 list of guide articles organized by category (Visa, Tax, Banking, Safety, Work Rights, Regions, Packing)",
+        "Each article: title, summary, read time, category badge",
+        "Search bar to filter articles",
+        "Create src/pages/GuideArticle.tsx \u2014 individual article page with rich text content",
+        "Create 2-3 placeholder guide articles in Supabase or as static data for now (Visa Guide NZ, Packing List, Safety Guide)",
+        "Uses Navigation + Footer (public) or WorkerLayout (logged in)",
+        "npm run build passes"
+      ],
+      "priority": 53,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-054",
+      "title": "Page: Update Blog pages for KYSS",
+      "description": "Transform the existing blog pages with KYSS content.",
+      "acceptanceCriteria": [
+        "Update src/pages/Blog.tsx \u2014 remove Lynck blog content, add 2-3 placeholder KYSS blog posts (e.g., 'Kiwifruit Season Starting in Bay of Plenty', 'Meet Bay Gold Orchards', 'Top Tips for First-Time Farm Workers')",
+        "Update src/pages/BlogPost.tsx \u2014 ensure it renders with KYSS branding and styling",
+        "Update src/data/blogData.ts \u2014 replace all Lynck blog entries with KYSS placeholder entries",
+        "Blog uses Navigation + Footer",
+        "npm run build passes"
+      ],
+      "priority": 54,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-055",
+      "title": "Page: Create WorkTypeDetail public page",
+      "description": "Build the public work type detail page (replaces ServiceDetail for non-logged-in visitors).",
+      "acceptanceCriteria": [
+        "Create src/pages/WorkTypeDetail.tsx",
+        "Reads :categorySlug from URL params",
+        "Hero section with category name, description, placeholder image",
+        "Sections: Regions Available (cards by region), What to Expect (hours, pay range, physical requirements), Featured Open Pools preview (3-4 pools, 'Sign up to see all'), FAQ for this work type",
+        "CTA: [Create Profile to Browse All Pools \u2192] \u2192 /auth/sign-up",
+        "Uses Navigation + Footer (public page)",
+        "npm run build passes"
+      ],
+      "priority": 55,
+      "passes": false,
+      "notes": "This is the SEO landing page for each work type \u2014 helps with organic search traffic."
+    },
+    {
+      "id": "US-056",
+      "title": "Page: Build Worker Settings page",
+      "description": "Create the account settings and notification preferences page for workers.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/Settings.tsx",
+        "Account section: change email, change password",
+        "Notification preferences: toggles for each notification type (pool updates, messages, new pool matches, visa reminders)",
+        "Country preference: switch between NZ/AU/Both",
+        "Danger zone: delete account (with confirmation)",
+        "Wrapped in WorkerLayout",
+        "npm run build passes"
+      ],
+      "priority": 56,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-057",
+      "title": "Page: Build Worker Profile view page",
+      "description": "Create the page where workers can view their own profile.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/Profile.tsx",
+        "Display all profile fields in a clean read-only layout: photo, name, nationality, visa type + expiry, work preferences, region preferences, availability, transport, accommodation, experience, languages, bio, emergency contact",
+        "Profile completion badge: \u2705 Complete or progress %",
+        "Visa status badge: verified (green checkmark) or pending",
+        "[Edit Profile] button \u2192 /profile/edit",
+        "Wrapped in WorkerLayout",
+        "npm run build passes"
+      ],
+      "priority": 57,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-058",
+      "title": "Page: Build Employer Profile edit page",
+      "description": "Create the employer business profile page.",
+      "acceptanceCriteria": [
+        "Create src/pages/employer/Profile.tsx",
+        "Form fields: business name, region, country (NZ/AU), logo upload, description textarea, website URL, contact phone",
+        "Save button updates employer_profiles in Supabase",
+        "Show verified badge if employer is verified by admin",
+        "Wrapped in EmployerLayout",
+        "npm run build passes"
+      ],
+      "priority": 58,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-059",
+      "title": "Feature: Build Seasonal Work Calendar",
+      "description": "Create a visual calendar showing crop seasons linked to open pools.",
+      "acceptanceCriteria": [
+        "Create src/pages/worker/SeasonalCalendar.tsx",
+        "Visual timeline/calendar showing: which crops are in season, in which regions, and when",
+        "Data: hardcoded seasonal data for NZ and AU major crops (kiwifruit Mar-Jun, apples Feb-May, grapes Mar-Apr, cherries Dec-Jan, etc.)",
+        "Each crop season entry links to relevant open pools (if any exist)",
+        "Country toggle: NZ | AU",
+        "Wrapped in WorkerLayout",
+        "npm run build passes"
+      ],
+      "priority": 59,
+      "passes": false,
+      "notes": "Use a horizontal timeline or Gantt-chart style visualization."
+    },
+    {
+      "id": "US-060",
+      "title": "Feature: Build Admin Blog and Guide CMS",
+      "description": "Create simple CMS pages for admin to manage blog posts and guide articles.",
+      "acceptanceCriteria": [
+        "Create src/pages/admin/BlogManager.tsx \u2014 list of blog posts with create/edit/delete/publish toggle",
+        "Create blog post form: title, slug, excerpt, content (textarea or basic rich text), featured image upload, category/tags, publish toggle",
+        "Create src/pages/admin/GuideManager.tsx \u2014 same pattern for guide articles with category selector",
+        "Store blog posts and guide articles in Supabase (create tables if not exists: blog_posts, guide_articles with title, slug, content, excerpt, featured_image_url, category, published, timestamps)",
+        "Wrapped in AdminLayout",
+        "npm run build passes"
+      ],
+      "priority": 60,
+      "passes": false,
+      "notes": "Keep the CMS simple \u2014 no need for a full rich text editor. Markdown textarea is fine for MVP."
+    },
+    {
+      "id": "US-061",
+      "title": "SEO: Update meta tags and sitemap for all KYSS pages",
+      "description": "Update SEO metadata across the entire site.",
+      "acceptanceCriteria": [
+        "Update src/lib/seo.tsx with KYSS page titles, descriptions, and Open Graph data for all public pages",
+        "Update public/sitemap.xml with all new KYSS routes",
+        "Update public/robots.txt for KYSS domain",
+        "Each public page has proper meta title, meta description, og:title, og:description, og:image",
+        "Work type detail pages have unique SEO per category",
+        "npm run build passes"
+      ],
+      "priority": 61,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-062",
+      "title": "Config: Update Netlify config and environment",
+      "description": "Update deployment configuration for KYSS.",
+      "acceptanceCriteria": [
+        "Update netlify.toml: all routes redirect to index.html for SPA routing, add new redirect rules for KYSS routes",
+        "Update .env.example with all KYSS environment variables",
+        "Verify npm run build produces clean output with no errors or warnings",
+        "Verify npm run dev starts successfully and landing page renders",
+        "npm run build passes"
+      ],
+      "priority": 62,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-063",
+      "title": "Polish: Full navigation flow testing and bug fixes",
+      "description": "Test the complete user flow end-to-end and fix any broken links, styling issues, or routing problems.",
+      "acceptanceCriteria": [
+        "Landing page loads correctly with all sections",
+        "Sign up flow works: create account \u2192 profile wizard \u2192 find work \u2192 category \u2192 pools \u2192 join pool",
+        "All sidebar links navigate correctly for worker, employer, and admin roles",
+        "All back buttons and breadcrumbs work",
+        "Mobile responsive: sidebar collapses, cards stack, forms are usable on phone",
+        "No console errors on any page",
+        "No broken images (placeholder images where real ones aren't available)",
+        "npm run build passes with zero errors and zero warnings"
+      ],
+      "priority": 63,
+      "passes": false,
+      "notes": "Final polish story. Fix everything that's broken from previous stories."
+    },
+    {
+      "id": "US-064",
+      "title": "Documentation: Create KYSS README and setup guide",
+      "description": "Replace the Lynck README with KYSS-specific documentation.",
+      "acceptanceCriteria": [
+        "Rewrite README.md: KYSS Vision overview, tech stack, setup instructions (clone, install, env setup, run dev), project structure (new folder layout), deployment instructions",
+        "Create AGENTS.md in project root with codebase patterns discovered during build (Supabase patterns, component conventions, auth flow, pool join logic, etc.)",
+        "Document environment variables needed",
+        "Document Supabase setup steps (run migrations, seed data)",
+        "npm run build passes"
+      ],
+      "priority": 64,
+      "passes": false,
+      "notes": "Last story. Clean documentation for anyone who works on the codebase next."
+    }
+  ]
+}
