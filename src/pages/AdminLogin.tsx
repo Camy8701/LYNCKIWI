@@ -32,7 +32,7 @@ const AdminLogin = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg"></div>
-            <span className="text-2xl font-semibold text-foreground">Lynck Services</span>
+            <span className="text-2xl font-semibold text-foreground">KYSS Vision</span>
           </div>
           <h1 className="text-3xl font-instrument-serif text-foreground mb-2">
             Admin Login

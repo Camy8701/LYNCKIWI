@@ -8,10 +8,10 @@ const Cookies = () => {
   return (
     <>
       <SEO
-        title={t("Cookie-Richtlinie - Lynck Services", "Cookie Policy - Lynck Services")}
+        title={t("Cookie-Richtlinie - KYSS Vision", "Cookie Policy - KYSS Vision")}
         description={t(
-          "Erfahren Sie, wie Lynck Services Cookies verwendet",
-          "Learn how Lynck Services uses cookies"
+          "Erfahren Sie, wie KYSS Vision Cookies verwendet",
+          "Learn how KYSS Vision uses cookies"
         )}
         canonicalUrl="/cookies"
       />
@@ -125,8 +125,8 @@ const Cookies = () => {
                 )}
               </p>
               <p className="mt-2">
-                <a href="mailto:info@lynckservices.de" className="text-primary hover:underline">
-                  info@lynckservices.de
+                <a href="mailto:info@kyssvision.de" className="text-primary hover:underline">
+                  info@kyssvision.de
                 </a>
               </p>
             </section>

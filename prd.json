@@ -37,7 +37,7 @@
         "npm run build passes"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Pure text replacement and branding. No structural changes."
     },
     {

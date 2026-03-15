@@ -34,8 +34,8 @@ const testimonials = [
     initials: "AK",
     color: "amber",
     rating: 5,
-    textDe: "Die Solaranlage wurde professionell installiert. Dank Lynck Services habe ich beim Vergleich 15% gespart!",
-    textEn: "The solar system was professionally installed. Thanks to Lynck Services I saved 15% by comparing!",
+    textDe: "Die Solaranlage wurde professionell installiert. Dank KYSS Vision habe ich beim Vergleich 15% gespart!",
+    textEn: "The solar system was professionally installed. Thanks to KYSS Vision I saved 15% by comparing!",
     metricDe: "15% Kostenersparnis",
     metricEn: "15% Cost Savings",
     metricColor: "amber"
@@ -47,8 +47,8 @@ const testimonials = [
     initials: "MR",
     color: "sky",
     rating: 5,
-    textDe: "Als Vermieter nutze ich Lynck für alle meine Immobilien. Zuverlässige Handwerker, faire Preise, schnelle Abwicklung.",
-    textEn: "As a landlord I use Lynck for all my properties. Reliable contractors, fair prices, fast processing.",
+    textDe: "Als Vermieter nutze ich KYSS für alle meine Immobilien. Zuverlässige Handwerker, faire Preise, schnelle Abwicklung.",
+    textEn: "As a landlord I use KYSS for all my properties. Reliable contractors, fair prices, fast processing.",
     metricDe: "12 Projekte erfolgreich",
     metricEn: "12 Projects Successful",
     metricColor: "sky"

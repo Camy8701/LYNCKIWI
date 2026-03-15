@@ -71,7 +71,7 @@ const Contact = () => {
         description: t(
           "Ihre Nachricht konnte nicht gesendet werden. Bitte kontaktieren Sie uns direkt per E-Mail:",
           "Your message could not be sent. Please contact us directly via email:"
-        ) + " info@lynckservices.de",
+        ) + " info@kyssvision.de",
         variant: "destructive",
         duration: 10000 // Show for 10 seconds
       });
@@ -97,8 +97,8 @@ const Contact = () => {
                 <Mail className="w-5 h-5 text-primary" />
                 <div>
                   <p className="text-sm text-muted-foreground">{t("E-Mail", "Email")}</p>
-                  <a href="mailto:info@lynckservices.de" className="text-foreground hover:text-primary transition-colors">
-                    info@lynckservices.de
+                  <a href="mailto:info@kyssvision.de" className="text-foreground hover:text-primary transition-colors">
+                    info@kyssvision.de
                   </a>
                 </div>
               </div>

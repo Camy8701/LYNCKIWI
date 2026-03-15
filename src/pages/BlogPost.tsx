@@ -404,7 +404,7 @@ const BlogPost = () => {
     <PageLayout breadcrumbItems={breadcrumbItems}>
       <>
         <SEO
-          title={`${title} | Lynck Services Blog`}
+          title={`${title} | KYSS Vision Blog`}
           description={excerpt}
           canonicalUrl={`/blog/${post.slug}`}
           ogImage={post.image}

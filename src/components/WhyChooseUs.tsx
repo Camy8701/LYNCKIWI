@@ -33,7 +33,7 @@ const WhyChooseUs = () => {
       <div className="glass-card rounded-3xl p-8 lg:p-12">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <h2 className="text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground font-serif font-normal">
-            {t("Warum Lynck Services?", "Why Lynck Services?")}
+            {t("Warum KYSS Vision?", "Why KYSS Vision?")}
           </h2>
         </div>
 

@@ -66,7 +66,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg"></div>
               <div>
-                <div className="text-sidebar-foreground font-semibold">Lynck Services</div>
+                <div className="text-sidebar-foreground font-semibold">KYSS Vision</div>
                 <div className="text-xs text-muted-foreground">{t('Admin Dashboard', 'Admin Dashboard')}</div>
               </div>
             </div>
@@ -137,7 +137,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg"></div>
-                <span className="text-sidebar-foreground font-semibold">Lynck Admin</span>
+                <span className="text-sidebar-foreground font-semibold">KYSS Admin</span>
               </div>
               <div className="flex items-center gap-2">
                 <button

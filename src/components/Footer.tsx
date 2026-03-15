@@ -38,7 +38,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg"></div>
-              <span className="text-lg font-semibold text-foreground tracking-tight">Lynck Services</span>
+              <span className="text-lg font-semibold text-foreground tracking-tight">KYSS Vision</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {t(
@@ -110,8 +110,8 @@ const Footer = () => {
         <div className="border-t border-white/[0.06] pt-8 text-center">
           <p className="text-sm text-muted-foreground">
             {t(
-              "© 2025 Lynck Services. Alle Rechte vorbehalten.",
-              "© 2025 Lynck Services. All rights reserved."
+              "© 2025 KYSS Vision. Alle Rechte vorbehalten.",
+              "© 2025 KYSS Vision. All rights reserved."
             )}
           </p>
         </div>
