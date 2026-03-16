@@ -17,7 +17,7 @@ export default function CompaniesTable({ companies, services, cities, onUpdate }
   };
   
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(t(`Möchten Sie "${name}" wirklich löschen?`, `Do you really want to delete "${name}"?`))) return;
+    if (!confirm(`Do you really want to delete "${name}"?`)) return;
     
     try {
       await deleteCompany(id);

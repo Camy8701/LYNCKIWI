@@ -28,7 +28,7 @@ const TrustBadges = () => {
           <div key={index} className="flex items-center gap-2">
             <Check className="w-4 h-4 text-primary flex-shrink-0" />
             <span className="text-sm text-muted-foreground">
-              {t(badge.textDe, badge.textEn)}
+              {badge.textEn}
             </span>
           </div>
         ))}

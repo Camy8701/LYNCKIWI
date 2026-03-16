@@ -87,7 +87,7 @@ const Breadcrumb = ({ customItems }: BreadcrumbProps) => {
           // Get translated label
           const translationKey = breadcrumbMap[name];
           const label = translationKey
-            ? t(translationKey.de, translationKey.en)
+            ? translationKey.en
             : name.charAt(0).toUpperCase() + name.slice(1);
 
           // Special case: "services" should link to homepage services section

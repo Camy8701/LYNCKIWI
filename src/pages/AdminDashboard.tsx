@@ -185,7 +185,7 @@ const AdminDashboard = () => {
                 {'Recent Leads'}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {t(`Die ${recentLeads.length} neuesten Anfragen`, `The ${recentLeads.length} most recent requests`)}
+                {`The ${recentLeads.length} most recent requests`}
               </p>
             </div>
             <Link 

@@ -5,7 +5,7 @@ import { Mail, Eye, Archive, Trash2, Clock, User } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { de } from "date-fns/locale";
+;
 
 const AdminMessages = () => {
   const { toast } = useToast();
@@ -220,8 +220,8 @@ const AdminMessages = () => {
                   <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      {format(new Date(message.created_at), language === 'de' ? 'dd.MM.yyyy HH:mm' : 'MM/dd/yyyy HH:mm', {
-                        locale: language === 'de' ? de : undefined
+                      {format(new Date(message.created_at), 'MM/dd/yyyy HH:mm', {
+                        locale: undefined
                       })}
                     </div>
                     <div className="flex items-center gap-1">
@@ -258,8 +258,8 @@ const AdminMessages = () => {
 
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
                   <Clock className="w-4 h-4" />
-                  {format(new Date(selectedMessage.created_at), language === 'de' ? 'dd. MMMM yyyy, HH:mm' : 'MMMM dd, yyyy, HH:mm', {
-                    locale: language === 'de' ? de : undefined
+                  {format(new Date(selectedMessage.created_at), 'MMMM dd, yyyy, HH:mm', {
+                    locale: undefined
                   })}
                 </div>
 

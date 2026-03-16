@@ -355,7 +355,7 @@ const BlogPost = () => {
 
   const handleShare = (platform: string) => {
     const url = window.location.href;
-    const title = language === 'de' ? post.titleDe : post.titleEn;
+    const title = post.titleEn;
     
     let shareUrl = '';
     switch(platform) {
@@ -382,13 +382,13 @@ const BlogPost = () => {
     }
   };
 
-  const title = language === 'de' ? post.titleDe : post.titleEn;
-  const content = language === 'de' ? post.contentDe : post.contentEn;
-  const excerpt = language === 'de' ? post.excerptDe : post.excerptEn;
+  const title = post.titleEn;
+  const content = post.contentEn;
+  const excerpt = post.excerptEn;
 
   // Convert ISO date to formatted date
   const formattedDate = new Date(post.date).toLocaleDateString(
-    language === 'de' ? 'de-DE' : 'en-US',
+    'en-US',
     { year: 'numeric', month: 'long', day: 'numeric' }
   );
   const isoDate = new Date(post.date).toISOString();
@@ -433,7 +433,7 @@ const BlogPost = () => {
         <div className="max-w-5xl mx-auto mb-8">
           <img 
             src={post.image} 
-            alt={language === 'de' ? post.titleDe : post.titleEn}
+            alt={post.titleEn}
             className="w-full h-[400px] object-cover rounded-2xl"
           />
         </div>
@@ -459,7 +459,7 @@ const BlogPost = () => {
 
             {/* Title */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground font-serif font-normal mb-8">
-              {language === 'de' ? post.titleDe : post.titleEn}
+              {post.titleEn}
             </h1>
 
             {/* Share Buttons */}
@@ -597,13 +597,13 @@ const BlogPost = () => {
                     <div className="aspect-video overflow-hidden">
                       <img 
                         src={related.image} 
-                        alt={language === 'de' ? related.titleDe : related.titleEn}
+                        alt={related.titleEn}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                     <div className="p-4">
                       <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                        {language === 'de' ? related.titleDe : related.titleEn}
+                        {related.titleEn}
                       </h3>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Clock className="w-3 h-3" />

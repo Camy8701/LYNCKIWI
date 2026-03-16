@@ -16,7 +16,7 @@ const Blog = () => {
             {blogPosts.map((post) => {
               // Format date
               const formattedDate = new Date(post.date).toLocaleDateString(
-                language === 'de' ? 'de-DE' : 'en-US',
+                'en-US',
                 { year: 'numeric', month: 'long', day: 'numeric' }
               );
 
@@ -25,7 +25,7 @@ const Blog = () => {
                   <div className="aspect-video overflow-hidden relative">
                     <img
                       src={post.image}
-                      alt={language === 'de' ? post.titleDe : post.titleEn}
+                      alt={post.titleEn}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     {post.city && (
@@ -45,14 +45,14 @@ const Blog = () => {
                     </div>
                     <div className="mb-2">
                       <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">
-                        {language === 'de' ? post.categoryDe : post.categoryEn}
+                        {post.categoryEn}
                       </span>
                     </div>
                     <h2 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors line-clamp-2">
-                      {language === 'de' ? post.titleDe : post.titleEn}
+                      {post.titleEn}
                     </h2>
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                      {language === 'de' ? post.excerptDe : post.excerptEn}
+                      {post.excerptEn}
                     </p>
                     <a
                       href={`/blog/${post.slug}`}
@@ -61,7 +61,7 @@ const Blog = () => {
                         if (typeof window !== 'undefined' && (window as any).dataLayer) {
                           (window as any).dataLayer.push({
                             event: 'blog_click',
-                            blog_title: language === 'de' ? post.titleDe : post.titleEn,
+                            blog_title: post.titleEn,
                             blog_slug: post.slug,
                             blog_category: post.category,
                             click_location: 'blog_listing'

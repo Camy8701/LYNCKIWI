@@ -52,7 +52,7 @@ export const SearchBar = () => {
     const searchTerm = query.toLowerCase();
 
     const matchedServices = services.filter((service) => {
-      const name = language === "de" ? service.name : service.name_en;
+      const name = service.name_en;
       return name.toLowerCase().includes(searchTerm);
     });
 
@@ -118,7 +118,7 @@ export const SearchBar = () => {
               </div>
               {filteredServices.map((service) => {
                 const IconComponent = getIconComponent(service.icon);
-                const serviceName = language === "de" ? service.name : service.name_en;
+                const serviceName = service.name_en;
                 
                 return (
                   <button

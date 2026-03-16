@@ -87,7 +87,7 @@ const AdminAnalytics = () => {
   // Format date for chart display
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return new Intl.DateTimeFormat(language === 'de' ? 'de-DE' : 'en-US', {
+    return new Intl.DateTimeFormat('en-US', {
       day: '2-digit',
       month: 'short',
     }).format(date);

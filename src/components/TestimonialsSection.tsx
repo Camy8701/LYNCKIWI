@@ -122,7 +122,7 @@ const TestimonialsSection = () => {
                 <div>
                   <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
                   <p className="text-sm text-muted-foreground">
-                    {language === 'de' ? testimonial.roleDe : testimonial.roleEn}
+                    {testimonial.roleEn}
                   </p>
                 </div>
               </div>
@@ -132,10 +132,10 @@ const TestimonialsSection = () => {
                 ))}
               </div>
               <p className="text-foreground/90 text-sm leading-relaxed mb-4">
-                {language === 'de' ? testimonial.textDe : testimonial.textEn}
+                {testimonial.textEn}
               </p>
               <div className={`text-sm font-medium ${colors.metric}`}>
-                {language === 'de' ? testimonial.metricDe : testimonial.metricEn}
+                {testimonial.metricEn}
               </div>
             </div>
             );

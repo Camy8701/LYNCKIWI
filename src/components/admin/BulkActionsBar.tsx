@@ -24,7 +24,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
     try {
       const leadIds = selectedLeads.map(lead => lead.id);
       await bulkUpdateLeadStatus(leadIds, newStatus);
-      alert(t(`✅ ${selectedLeads.length} Leads aktualisiert`, `✅ ${selectedLeads.length} leads updated`));
+      alert(`✅ ${selectedLeads.length} leads updated`);
       setShowStatusMenu(false);
       onClearSelection();
       onUpdate();
@@ -69,7 +69,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
         await assignLeadToCompanies(leadId, [selectedCompany], user?.email || 'admin');
       }
       
-      alert(t(`✅ ${selectedLeads.length} Leads zugewiesen`, `✅ ${selectedLeads.length} leads assigned`));
+      alert(`✅ ${selectedLeads.length} leads assigned`);
       setShowAssignModal(false);
       setSelectedCompany('');
       onClearSelection();
@@ -85,7 +85,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
   const handleExport = () => {
     const filename = generateExportFilename('leads-bulk-export');
     exportLeadsToCSV(selectedLeads, filename);
-    alert(t(`✅ ${selectedLeads.length} Leads exportiert`, `✅ ${selectedLeads.length} leads exported`));
+    alert(`✅ ${selectedLeads.length} leads exported`);
   };
 
   return (
@@ -209,7 +209,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
             </div>
 
             <p className="text-sm text-muted-foreground mb-4">
-              {t(`${selectedLeads.length} Leads einem Unternehmen zuweisen`, `Assign ${selectedLeads.length} leads to a company`)}
+              {`Assign ${selectedLeads.length} leads to a company`}
             </p>
 
             {loading ? (

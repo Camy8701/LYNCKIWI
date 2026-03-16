@@ -55,7 +55,7 @@ const Footer = () => {
                     href={link.slug}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
                   >
-                    {language === 'de' ? link.nameDe : link.nameEn}
+                    {link.nameEn}
                   </a>
                 </li>
               ))}
@@ -74,7 +74,7 @@ const Footer = () => {
                     href={link.slug}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
                   >
-                    {language === 'de' ? link.nameDe : link.nameEn}
+                    {link.nameEn}
                   </a>
                 </li>
               ))}
@@ -93,7 +93,7 @@ const Footer = () => {
                     href={link.slug}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
                   >
-                    {language === 'de' ? link.nameDe : link.nameEn}
+                    {link.nameEn}
                   </a>
                 </li>
               ))}

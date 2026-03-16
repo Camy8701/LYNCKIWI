@@ -42,10 +42,10 @@ const WhyChooseUs = () => {
                 <benefit.icon className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">
-                {language === 'de' ? benefit.titleDe : benefit.titleEn}
+                {benefit.titleEn}
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {language === 'de' ? benefit.descriptionDe : benefit.descriptionEn}
+                {benefit.descriptionEn}
               </p>
             </div>
           ))}

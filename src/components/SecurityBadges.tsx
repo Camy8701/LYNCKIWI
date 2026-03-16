@@ -32,7 +32,7 @@ const SecurityBadges = () => {
           <div key={index} className="flex items-center gap-2">
             <badge.icon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
             <span className="text-xs text-muted-foreground">
-              {t(badge.textDe, badge.textEn)}
+              {badge.textEn}
             </span>
           </div>
         ))}
