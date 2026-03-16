@@ -5,10 +5,8 @@ import CompanyForm from '@/components/admin/CompanyForm';
 import { getCompanyById, getServices, getCities } from '@/lib/database';
 import type { Company, Service, City } from '@/lib/database';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 const AdminCompanyForm = () => {
-  const { t } = useLanguage();
   const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<Company | null>(null);
   const [services, setServices] = useState<Service[]>([]);
@@ -62,12 +60,12 @@ const AdminCompanyForm = () => {
       <div className="p-6 md:p-8">
         <div className="mb-6">
           <Link to="/admin/companies" className="text-sm text-muted-foreground hover:text-foreground">
-            ← {t('Zurück zu Unternehmen', 'Back to Companies')}
+            ← {'Back to Companies'}
           </Link>
         </div>
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-instrument-serif text-foreground mb-8">
-            {isNew ? t('Neues Unternehmen hinzufügen', 'Add New Company') : t('Unternehmen bearbeiten', 'Edit Company')}
+            {isNew ? 'Add New Company' : 'Edit Company'}
           </h1>
           <CompanyForm company={company || undefined} services={services} cities={cities} />
         </div>

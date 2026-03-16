@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   getLeadsTrend,
@@ -49,7 +48,6 @@ function calculateChange(current: number, previous: number): string {
 type TimeRange = 7 | 14 | 30 | 90;
 
 const AdminAnalytics = () => {
-  const { t, language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRange>(30);
 
@@ -141,10 +139,10 @@ const AdminAnalytics = () => {
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-instrument-serif text-foreground mb-2">
-              {t('Analytics', 'Analytics')}
+              {'Analytics'}
             </h1>
             <p className="text-muted-foreground">
-              {t('Detaillierte Einblicke in Ihre Lead-Performance', 'Detailed insights into your lead performance')}
+              {'Detailed insights into your lead performance'}
             </p>
           </div>
 
@@ -171,7 +169,7 @@ const AdminAnalytics = () => {
           {/* Total Leads */}
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl p-6">
             <div className="text-muted-foreground text-sm font-medium mb-1">
-              {t('Leads gesamt', 'Total Leads')} ({timeRange}d)
+              {'Total Leads'} ({timeRange}d)
             </div>
             <div className="text-3xl font-bold text-foreground mb-1">
               {totalLeads}
@@ -179,14 +177,14 @@ const AdminAnalytics = () => {
             <div className={`text-xs font-medium ${
               leadsChange.startsWith('+') ? 'text-primary' : 'text-destructive'
             }`}>
-              {leadsChange} {t('vs. vorher', 'vs. previous')}
+              {leadsChange} {'vs. previous'}
             </div>
           </div>
 
           {/* Total Revenue */}
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl p-6">
             <div className="text-muted-foreground text-sm font-medium mb-1">
-              {t('Umsatz gesamt', 'Total Revenue')} ({timeRange}d)
+              {'Total Revenue'} ({timeRange}d)
             </div>
             <div className="text-3xl font-bold text-foreground mb-1">
               {formatCurrency(totalRevenue)}
@@ -194,33 +192,33 @@ const AdminAnalytics = () => {
             <div className={`text-xs font-medium ${
               revenueChange.startsWith('+') ? 'text-primary' : 'text-destructive'
             }`}>
-              {revenueChange} {t('vs. vorher', 'vs. previous')}
+              {revenueChange} {'vs. previous'}
             </div>
           </div>
 
           {/* Avg Conversion Rate */}
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl p-6">
             <div className="text-muted-foreground text-sm font-medium mb-1">
-              {t('Ø Konversionsrate', 'Avg Conversion Rate')}
+              {'Avg Conversion Rate'}
             </div>
             <div className="text-3xl font-bold text-foreground mb-1">
               {avgConversionRate}%
             </div>
             <div className="text-xs text-muted-foreground">
-              {t('über alle Services', 'across all services')}
+              {'across all services'}
             </div>
           </div>
 
           {/* Top City */}
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl p-6">
             <div className="text-muted-foreground text-sm font-medium mb-1">
-              {t('Top Stadt', 'Top City')}
+              {'Top City'}
             </div>
             <div className="text-3xl font-bold text-foreground mb-1">
               {topCities[0]?.city || '-'}
             </div>
             <div className="text-xs text-muted-foreground">
-              {topCities[0]?.leads || 0} {t('Leads', 'Leads')}
+              {topCities[0]?.leads || 0} {'Leads'}
             </div>
           </div>
         </div>
@@ -230,7 +228,7 @@ const AdminAnalytics = () => {
           {/* Leads Trend Chart */}
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl p-6">
             <h2 className="text-lg font-semibold text-foreground mb-6">
-              {t('Leads Trend', 'Leads Trend')}
+              {'Leads Trend'}
             </h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -251,7 +249,7 @@ const AdminAnalytics = () => {
                   <Tooltip
                     contentStyle={tooltipStyle}
                     labelFormatter={formatDate}
-                    formatter={(value: number) => [value, t('Leads', 'Leads')]}
+                    formatter={(value: number) => [value, 'Leads']}
                   />
                   <Line
                     type="monotone"
@@ -269,7 +267,7 @@ const AdminAnalytics = () => {
           {/* Revenue Trend Chart */}
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl p-6">
             <h2 className="text-lg font-semibold text-foreground mb-6">
-              {t('Umsatz Trend', 'Revenue Trend')}
+              {'Revenue Trend'}
             </h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -296,7 +294,7 @@ const AdminAnalytics = () => {
                   <Tooltip
                     contentStyle={tooltipStyle}
                     labelFormatter={formatDate}
-                    formatter={(value: number) => [formatCurrency(value), t('Umsatz', 'Revenue')]}
+                    formatter={(value: number) => [formatCurrency(value), 'Revenue']}
                   />
                   <Area
                     type="monotone"
@@ -313,7 +311,7 @@ const AdminAnalytics = () => {
           {/* Conversion by Service Chart */}
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl p-6">
             <h2 className="text-lg font-semibold text-foreground mb-6">
-              {t('Konversionsrate nach Service', 'Conversion Rate by Service')}
+              {'Conversion Rate by Service'}
             </h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -336,7 +334,7 @@ const AdminAnalytics = () => {
                   <Tooltip
                     contentStyle={tooltipStyle}
                     formatter={(value: number, name: string) => {
-                      if (name === 'rate') return [`${value}%`, t('Konversionsrate', 'Conversion Rate')];
+                      if (name === 'rate') return [`${value}%`, 'Conversion Rate'];
                       return [value, name];
                     }}
                   />
@@ -354,7 +352,7 @@ const AdminAnalytics = () => {
           {/* Top Cities Chart */}
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl p-6">
             <h2 className="text-lg font-semibold text-foreground mb-6">
-              {t('Top Städte nach Leads', 'Top Cities by Leads')}
+              {'Top Cities by Leads'}
             </h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -376,8 +374,8 @@ const AdminAnalytics = () => {
                   <Tooltip
                     contentStyle={tooltipStyle}
                     formatter={(value: number, name: string) => {
-                      if (name === 'leads') return [value, t('Leads', 'Leads')];
-                      if (name === 'revenue') return [formatCurrency(value), t('Umsatz', 'Revenue')];
+                      if (name === 'leads') return [value, 'Leads'];
+                      if (name === 'revenue') return [formatCurrency(value), 'Revenue'];
                       return [value, name];
                     }}
                   />
@@ -385,7 +383,7 @@ const AdminAnalytics = () => {
                   <Bar
                     dataKey="leads"
                     fill="#22c55e"
-                    name={t('Leads', 'Leads')}
+                    name={'Leads'}
                     radius={[0, 4, 4, 0]}
                     maxBarSize={15}
                   />
@@ -399,10 +397,10 @@ const AdminAnalytics = () => {
         <div className="mt-8 bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-2xl overflow-hidden">
           <div className="p-6 border-b border-white/[0.06]">
             <h2 className="text-xl font-semibold text-foreground mb-1">
-              {t('Service-Statistiken', 'Service Statistics')}
+              {'Service Statistics'}
             </h2>
             <p className="text-sm text-muted-foreground">
-              {t('Detaillierte Aufschlüsselung nach Servicekategorie', 'Detailed breakdown by service category')}
+              {'Detailed breakdown by service category'}
             </p>
           </div>
 
@@ -411,16 +409,16 @@ const AdminAnalytics = () => {
               <thead className="bg-white/[0.02] border-b border-white/[0.06]">
                 <tr>
                   <th className="text-left py-3 px-6 text-xs font-medium text-muted-foreground uppercase">
-                    {t('Service', 'Service')}
+                    {'Service'}
                   </th>
                   <th className="text-right py-3 px-6 text-xs font-medium text-muted-foreground uppercase">
-                    {t('Leads gesamt', 'Total Leads')}
+                    {'Total Leads'}
                   </th>
                   <th className="text-right py-3 px-6 text-xs font-medium text-muted-foreground uppercase">
-                    {t('Konvertiert', 'Converted')}
+                    {'Converted'}
                   </th>
                   <th className="text-right py-3 px-6 text-xs font-medium text-muted-foreground uppercase">
-                    {t('Konversionsrate', 'Conversion Rate')}
+                    {'Conversion Rate'}
                   </th>
                 </tr>
               </thead>

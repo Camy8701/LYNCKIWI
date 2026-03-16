@@ -1,5 +1,4 @@
 import { Home, Wrench, BookOpen, MessageCircle } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Tooltip,
   TooltipContent,
@@ -8,7 +7,6 @@ import {
 } from "@/components/ui/tooltip";
 
 const Sidebar = () => {
-  const { t } = useLanguage();
   // For now, we'll show the public version. Later, we'll add auth check here.
   const isAdmin = false;
 
@@ -24,7 +22,7 @@ const Sidebar = () => {
             </a>
           </TooltipTrigger>
           <TooltipContent side="right">
-            <p>{t("Home", "Home")}</p>
+            <p>{"Home"}</p>
           </TooltipContent>
         </Tooltip>
         
@@ -37,7 +35,7 @@ const Sidebar = () => {
             </a>
           </TooltipTrigger>
           <TooltipContent side="right">
-            <p>{t("Dienstleistungen", "Services")}</p>
+            <p>{"Services"}</p>
           </TooltipContent>
         </Tooltip>
         
@@ -48,7 +46,7 @@ const Sidebar = () => {
             </a>
           </TooltipTrigger>
           <TooltipContent side="right">
-            <p>{t("Blog", "Blog")}</p>
+            <p>{"Blog"}</p>
           </TooltipContent>
         </Tooltip>
         
@@ -59,7 +57,7 @@ const Sidebar = () => {
             </button>
           </TooltipTrigger>
           <TooltipContent side="right">
-            <p>{t("AI Assistent", "AI Assistant")}</p>
+            <p>{"AI Assistant"}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

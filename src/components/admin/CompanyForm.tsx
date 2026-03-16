@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createCompany, updateCompany } from '@/lib/database';
 import type { Company, Service, City } from '@/lib/database';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CompanyFormProps {
   company?: Company;
@@ -11,7 +10,6 @@ interface CompanyFormProps {
 }
 
 export default function CompanyForm({ company, services, cities }: CompanyFormProps) {
-  const { t } = useLanguage();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,31 +32,31 @@ export default function CompanyForm({ company, services, cities }: CompanyFormPr
     
     // Validation
     if (!formData.name.trim()) {
-      setError(t('Firmenname ist erforderlich', 'Company name is required'));
+      setError('Company name is required');
       setLoading(false);
       return;
     }
     
     if (!formData.phone.trim()) {
-      setError(t('Telefonnummer ist erforderlich', 'Phone number is required'));
+      setError('Phone number is required');
       setLoading(false);
       return;
     }
     
     if (!formData.email.trim()) {
-      setError(t('E-Mail ist erforderlich', 'Email is required'));
+      setError('Email is required');
       setLoading(false);
       return;
     }
     
     if (formData.service_ids.length === 0) {
-      setError(t('Mindestens ein Service muss ausgewählt werden', 'At least one service must be selected'));
+      setError('At least one service must be selected');
       setLoading(false);
       return;
     }
     
     if (formData.cities.length === 0) {
-      setError(t('Mindestens eine Stadt muss ausgewählt werden', 'At least one city must be selected'));
+      setError('At least one city must be selected');
       setLoading(false);
       return;
     }
@@ -66,15 +64,15 @@ export default function CompanyForm({ company, services, cities }: CompanyFormPr
     try {
       if (company) {
         await updateCompany(company.id, formData);
-        alert(t('✅ Unternehmen aktualisiert', '✅ Company updated'));
+        alert('✅ Company updated');
       } else {
         await createCompany(formData as any);
-        alert(t('✅ Unternehmen erstellt', '✅ Company created'));
+        alert('✅ Company created');
       }
       navigate('/admin/companies');
     } catch (err) {
       console.error('Error saving company:', err);
-      setError(t('Fehler beim Speichern. Bitte versuchen Sie es erneut.', 'Error saving. Please try again.'));
+      setError('Error saving. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -111,7 +109,7 @@ export default function CompanyForm({ company, services, cities }: CompanyFormPr
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              {t('Firmenname', 'Company Name')} <span className="text-red-400">*</span>
+              {'Company Name'} <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
@@ -124,13 +122,13 @@ export default function CompanyForm({ company, services, cities }: CompanyFormPr
           
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              {t('Kontaktperson', 'Contact Person')}
+              {'Contact Person'}
             </label>
             <input
               type="text"
               value={formData.contact_person}
               onChange={(e) => setFormData({ ...formData, contact_person: e.target.value })}
-              placeholder={t('Max Mustermann', 'Max Mustermann')}
+              placeholder={'Max Mustermann'}
               className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
@@ -140,7 +138,7 @@ export default function CompanyForm({ company, services, cities }: CompanyFormPr
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              {t('Telefon', 'Phone')} <span className="text-red-400">*</span>
+              {'Phone'} <span className="text-red-400">*</span>
             </label>
             <input
               type="tel"
@@ -153,7 +151,7 @@ export default function CompanyForm({ company, services, cities }: CompanyFormPr
           
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              {t('E-Mail', 'Email')} <span className="text-red-400">*</span>
+              {'Email'} <span className="text-red-400">*</span>
             </label>
             <input
               type="email"
@@ -166,7 +164,7 @@ export default function CompanyForm({ company, services, cities }: CompanyFormPr
           
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              {t('WhatsApp', 'WhatsApp')}
+              {'WhatsApp'}
             </label>
             <input
               type="tel"
@@ -181,7 +179,7 @@ export default function CompanyForm({ company, services, cities }: CompanyFormPr
         {/* Services Multi-Select */}
         <div>
           <label className="block text-sm font-medium text-foreground mb-3">
-            {t('Services', 'Services')} <span className="text-red-400">*</span>
+            {'Services'} <span className="text-red-400">*</span>
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {services.map((service) => (

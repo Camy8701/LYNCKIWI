@@ -4,7 +4,6 @@ import { bulkUpdateLeadStatus, getMatchingCompaniesForLead, assignLeadToCompanie
 import { getCurrentUser } from '@/lib/auth';
 import { exportLeadsToCSV, generateExportFilename } from '@/lib/exportUtils';
 import type { LeadWithService, Company } from '@/lib/database';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface BulkActionsBarProps {
   selectedLeads: LeadWithService[];
@@ -13,7 +12,6 @@ interface BulkActionsBarProps {
 }
 
 export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpdate }: BulkActionsBarProps) {
-  const { t } = useLanguage();
   const navigate = useNavigate();
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
@@ -32,7 +30,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
       onUpdate();
     } catch (error) {
       console.error('Error updating leads:', error);
-      alert(t('❌ Fehler beim Aktualisieren', '❌ Error updating'));
+      alert('❌ Error updating');
     } finally {
       setLoading(false);
     }
@@ -57,7 +55,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
 
   const handleBulkAssign = async () => {
     if (!selectedCompany) {
-      alert(t('Bitte wählen Sie ein Unternehmen aus', 'Please select a company'));
+      alert('Please select a company');
       return;
     }
 
@@ -78,7 +76,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
       onUpdate();
     } catch (error) {
       console.error('Error assigning leads:', error);
-      alert(t('❌ Fehler beim Zuweisen', '❌ Error assigning'));
+      alert('❌ Error assigning');
     } finally {
       setLoading(false);
     }
@@ -99,7 +97,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
               <span className="text-primary font-semibold">{selectedLeads.length}</span>
             </div>
             <span className="text-foreground font-medium">
-              {t('Lead(s) ausgewählt', 'Lead(s) selected')}
+              {'Lead(s) selected'}
             </span>
           </div>
 
@@ -115,7 +113,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
                   <circle cx="12" cy="12" r="3"/>
                   <path d="M12 1v6m0 6v6m-8-7h6m6 0h6"/>
                 </svg>
-                {t('Status ändern', 'Change Status')}
+                {'Change Status'}
               </button>
 
               {showStatusMenu && (
@@ -124,19 +122,19 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
                     onClick={() => handleBulkStatusUpdate('new')}
                     className="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors"
                   >
-                    🟡 {t('Neu', 'New')}
+                    🟡 {'New'}
                   </button>
                   <button
                     onClick={() => handleBulkStatusUpdate('contacted')}
                     className="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors"
                   >
-                    🔵 {t('Kontaktiert', 'Contacted')}
+                    🔵 {'Contacted'}
                   </button>
                   <button
                     onClick={() => handleBulkStatusUpdate('converted')}
                     className="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors"
                   >
-                    🟢 {t('Umgewandelt', 'Converted')}
+                    🟢 {'Converted'}
                   </button>
                 </div>
               )}
@@ -154,7 +152,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
                 <line x1="19" y1="8" x2="19" y2="14"/>
                 <line x1="22" y1="11" x2="16" y2="11"/>
               </svg>
-              {t('Zuweisen', 'Assign')}
+              {'Assign'}
             </button>
 
             {/* Export */}
@@ -167,7 +165,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
                 <polyline points="7 10 12 15 17 10"/>
                 <line x1="12" y1="15" x2="12" y2="3"/>
               </svg>
-              {t('Exportieren', 'Export')}
+              {'Export'}
             </button>
           </div>
 
@@ -175,7 +173,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
           <button
             onClick={onClearSelection}
             className="p-2 hover:bg-muted rounded-lg transition-all"
-            title={t('Auswahl aufheben', 'Clear selection')}
+            title={'Clear selection'}
           >
             <svg className="w-5 h-5 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18"/>
@@ -197,7 +195,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-foreground">
-                {t('Leads zuweisen', 'Assign Leads')}
+                {'Assign Leads'}
               </h3>
               <button
                 onClick={() => setShowAssignModal(false)}
@@ -216,13 +214,13 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
 
             {loading ? (
               <div className="text-center py-8 text-muted-foreground">
-                {t('Lade Unternehmen...', 'Loading companies...')}
+                {'Loading companies...'}
               </div>
             ) : matchingCompanies.length === 0 ? (
               <div className="text-center py-8">
                 <div className="text-5xl mb-4">🔍</div>
                 <p className="text-sm text-muted-foreground">
-                  {t('Keine passenden Unternehmen gefunden', 'No matching companies found')}
+                  {'No matching companies found'}
                 </p>
               </div>
             ) : (
@@ -232,7 +230,7 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
                   onChange={(e) => setSelectedCompany(e.target.value)}
                   className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground mb-4 focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
-                  <option value="">{t('Unternehmen auswählen...', 'Select company...')}</option>
+                  <option value="">{'Select company...'}</option>
                   {matchingCompanies.map(company => (
                     <option key={company.id} value={company.id}>
                       {company.name}
@@ -246,13 +244,13 @@ export default function BulkActionsBar({ selectedLeads, onClearSelection, onUpda
                     disabled={!selectedCompany || loading}
                     className="flex-1 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-all disabled:opacity-50"
                   >
-                    {loading ? t('Wird zugewiesen...', 'Assigning...') : t('Zuweisen', 'Assign')}
+                    {loading ? 'Assigning...' : 'Assign'}
                   </button>
                   <button
                     onClick={() => setShowAssignModal(false)}
                     className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-all"
                   >
-                    {t('Abbrechen', 'Cancel')}
+                    {'Cancel'}
                   </button>
                 </div>
               </>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { getCurrentUser, signOut } from '@/lib/auth';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -10,7 +9,6 @@ interface AdminLayoutProps {
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { language, setLanguage, t } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -48,13 +46,13 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   }
 
   const navigation = [
-    { name: t('Dashboard', 'Dashboard'), href: '/admin', icon: '📊' },
-    { name: t('Leads', 'Leads'), href: '/admin/leads', icon: '📋' },
-    { name: t('Nachrichten', 'Messages'), href: '/admin/messages', icon: '✉️' },
-    { name: t('Analytics', 'Analytics'), href: '/admin/analytics', icon: '📈' },
-    { name: t('Unternehmen', 'Companies'), href: '/admin/companies', icon: '🏢' },
-    { name: t('Services', 'Services'), href: '/admin/services', icon: '🔧' },
-    { name: t('Werbeanzeigen', 'Ads'), href: '/admin/ads', icon: '📣' },
+    { name: 'Dashboard', href: '/admin', icon: '📊' },
+    { name: 'Leads', href: '/admin/leads', icon: '📋' },
+    { name: 'Messages', href: '/admin/messages', icon: '✉️' },
+    { name: 'Analytics', href: '/admin/analytics', icon: '📈' },
+    { name: 'Companies', href: '/admin/companies', icon: '🏢' },
+    { name: 'Services', href: '/admin/services', icon: '🔧' },
+    { name: 'Ads', href: '/admin/ads', icon: '📣' },
   ];
 
     return (
@@ -67,7 +65,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
               <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg"></div>
               <div>
                 <div className="text-sidebar-foreground font-semibold">KYSS Vision</div>
-                <div className="text-xs text-muted-foreground">{t('Admin Dashboard', 'Admin Dashboard')}</div>
+                <div className="text-xs text-muted-foreground">{'Admin Dashboard'}</div>
               </div>
             </div>
           </div>
@@ -97,13 +95,6 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 
           {/* User Info + Logout */}
           <div className="p-4 border-t border-sidebar-border space-y-3">
-            {/* Language Toggle */}
-            <button
-              onClick={() => setLanguage(language === 'de' ? 'en' : 'de')}
-              className="w-full px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground bg-white/[0.03] border border-white/[0.06] rounded-lg transition-colors"
-            >
-              {language === 'de' ? '🇬🇧 English' : '🇩🇪 Deutsch'}
-            </button>
             
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
@@ -112,8 +103,8 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-sm text-sidebar-foreground truncate">{user?.email || t('Admin', 'Admin')}</div>
-                <div className="text-xs text-muted-foreground">{t('Administrator', 'Administrator')}</div>
+                <div className="text-sm text-sidebar-foreground truncate">{user?.email || 'Admin'}</div>
+                <div className="text-xs text-muted-foreground">{'Administrator'}</div>
               </div>
             </div>
             <button
@@ -125,7 +116,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
               <polyline points="16 17 21 12 16 7"/>
               <line x1="21" y1="12" x2="9" y2="12"/>
             </svg>
-            {t('Abmelden', 'Sign Out')}
+            {'Sign Out'}
           </button>
         </div>
       </aside>
@@ -141,16 +132,10 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setLanguage(language === 'de' ? 'en' : 'de')}
-                  className="px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-white/[0.03] border border-white/[0.06] rounded-lg transition-colors"
-                >
-                  {language === 'de' ? 'EN' : 'DE'}
-                </button>
-                <button
                   onClick={handleSignOut}
                   className="text-muted-foreground hover:text-sidebar-foreground text-sm"
                 >
-                  {t('Abmelden', 'Sign Out')}
+                  {'Sign Out'}
                 </button>
               </div>
             </div>

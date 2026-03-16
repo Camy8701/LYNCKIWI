@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { updateService } from '@/lib/database';
 import type { Service } from '@/lib/database';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ServicesTableProps {
   services: Service[];
@@ -10,30 +9,29 @@ interface ServicesTableProps {
 }
 
 export default function ServicesTable({ services, onUpdate }: ServicesTableProps) {
-  const { t } = useLanguage();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editPrice, setEditPrice] = useState<number>(0);
   
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
       await updateService(id, { is_active: !currentStatus });
-      alert(t('✅ Status aktualisiert', '✅ Status updated'));
+      alert('✅ Status updated');
       onUpdate();
     } catch (error) {
       console.error('Error toggling service:', error);
-      alert(t('❌ Fehler beim Aktualisieren', '❌ Error updating'));
+      alert('❌ Error updating');
     }
   };
   
   const handleSavePrice = async (id: string) => {
     try {
       await updateService(id, { lead_price_shared: editPrice });
-      alert(t('✅ Preis aktualisiert', '✅ Price updated'));
+      alert('✅ Price updated');
       setEditingId(null);
       onUpdate();
     } catch (error) {
       console.error('Error updating price:', error);
-      alert(t('❌ Fehler beim Aktualisieren', '❌ Error updating'));
+      alert('❌ Error updating');
     }
   };
   
@@ -43,12 +41,12 @@ export default function ServicesTable({ services, onUpdate }: ServicesTableProps
         <table className="w-full">
           <thead className="bg-muted/50 border-b border-border">
             <tr>
-              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{t('Icon', 'Icon')}</th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{t('Name', 'Name')}</th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{t('Slug', 'Slug')}</th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{t('Preis pro Lead', 'Price per Lead')}</th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{t('Status', 'Status')}</th>
-              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{t('Aktionen', 'Actions')}</th>
+              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{'Icon'}</th>
+              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{'Name'}</th>
+              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{'Slug'}</th>
+              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{'Price per Lead'}</th>
+              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{'Status'}</th>
+              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground uppercase">{'Actions'}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -107,7 +105,7 @@ export default function ServicesTable({ services, onUpdate }: ServicesTableProps
                         : 'bg-muted text-muted-foreground border border-border hover:bg-muted'
                     }`}
                   >
-                    {service.is_active ? t('Aktiv', 'Active') : t('Inaktiv', 'Inactive')}
+                    {service.is_active ? 'Active' : 'Inactive'}
                   </button>
                 </td>
                 <td className="py-4 px-4 text-right">
@@ -116,7 +114,7 @@ export default function ServicesTable({ services, onUpdate }: ServicesTableProps
                     target="_blank"
                     className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    {t('Vorschau', 'Preview')}
+                    {'Preview'}
                     <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                       <polyline points="15 3 21 3 21 9"/>

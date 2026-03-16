@@ -1,6 +1,5 @@
 import { ChevronRight, Home } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BreadcrumbItem {
   label: string;
@@ -13,7 +12,6 @@ interface BreadcrumbProps {
 
 const Breadcrumb = ({ customItems }: BreadcrumbProps) => {
   const location = useLocation();
-  const { t } = useLanguage();
 
   // If custom items are provided, use them
   if (customItems) {
@@ -26,7 +24,7 @@ const Breadcrumb = ({ customItems }: BreadcrumbProps) => {
               className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
             >
               <Home className="w-4 h-4" />
-              <span>{t("Startseite", "Home")}</span>
+              <span>{"Home"}</span>
             </Link>
           </li>
           {customItems.map((item, index) => (
@@ -79,7 +77,7 @@ const Breadcrumb = ({ customItems }: BreadcrumbProps) => {
             className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
           >
             <Home className="w-4 h-4" />
-            <span>{t("Startseite", "Home")}</span>
+            <span>{"Home"}</span>
           </Link>
         </li>
         {pathnames.map((name, index) => {

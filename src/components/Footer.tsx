@@ -1,7 +1,5 @@
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const Footer = () => {
-  const { t, language } = useLanguage();
 
   const serviceLinks = [
     { nameDe: "Heizung & HVAC", nameEn: "Heating & HVAC", slug: "/services/heizung" },
@@ -41,17 +39,14 @@ const Footer = () => {
               <span className="text-lg font-semibold text-foreground tracking-tight">KYSS Vision</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {t(
-                "Wir verbinden Hausbesitzer mit geprüften Handwerkern in ganz Deutschland. Kostenlos, schnell und unkompliziert.",
-                "We connect homeowners with verified contractors across Germany. Free, fast and uncomplicated."
-              )}
+              {"We connect homeowners with verified contractors across Germany. Free, fast and uncomplicated."}
             </p>
           </div>
 
           {/* Column 2: Services */}
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-4">
-              {t("Dienstleistungen", "Services")}
+              {"Services"}
             </h3>
             <ul className="space-y-2">
               {serviceLinks.map((link, index) => (
@@ -70,7 +65,7 @@ const Footer = () => {
           {/* Column 3: Company */}
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-4">
-              {t("Unternehmen", "Company")}
+              {"Company"}
             </h3>
             <ul className="space-y-2">
               {companyLinks.map((link, index) => (
@@ -89,7 +84,7 @@ const Footer = () => {
           {/* Column 4: Legal */}
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-4">
-              {t("Rechtliches", "Legal")}
+              {"Legal"}
             </h3>
             <ul className="space-y-2">
               {legalLinks.map((link, index) => (
@@ -109,10 +104,7 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="border-t border-white/[0.06] pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            {t(
-              "© 2025 KYSS Vision. Alle Rechte vorbehalten.",
-              "© 2025 KYSS Vision. All rights reserved."
-            )}
+            {"© 2025 KYSS Vision. All rights reserved."}
           </p>
         </div>
       </div>

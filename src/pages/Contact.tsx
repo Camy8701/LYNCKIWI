@@ -1,12 +1,10 @@
 import PageLayout from "@/components/PageLayout";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Mail, Send } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
-  const { t } = useLanguage();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -44,11 +42,8 @@ const Contact = () => {
 
       // Show success message
       toast({
-        title: t("Nachricht gesendet", "Message sent"),
-        description: t(
-          "Vielen Dank für Ihre Nachricht. Wir melden uns innerhalb von 24 Stunden bei Ihnen.",
-          "Thank you for your message. We will get back to you within 24 hours."
-        )
+        title: "Message sent",
+        description: "Thank you for your message. We will get back to you within 24 hours."
       });
 
       // GTM Event Tracking
@@ -67,11 +62,8 @@ const Contact = () => {
 
       // Show error with fallback option
       toast({
-        title: t("Fehler", "Error"),
-        description: t(
-          "Ihre Nachricht konnte nicht gesendet werden. Bitte kontaktieren Sie uns direkt per E-Mail:",
-          "Your message could not be sent. Please contact us directly via email:"
-        ) + " info@kyssvision.de",
+        title: "Error",
+        description: "Your message could not be sent. Please contact us directly via email:" + " info@kyssvision.de",
         variant: "destructive",
         duration: 10000 // Show for 10 seconds
       });
@@ -85,10 +77,10 @@ const Contact = () => {
       <div className="px-4 sm:px-6 lg:px-12 py-12">
         <div className="glass-card rounded-3xl p-8 lg:p-12 max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground font-serif font-normal mb-2">
-            {t("Kontakt", "Contact")}
+            {"Contact"}
           </h1>
           <p className="text-lg text-muted-foreground mb-6">
-            {t("Kontaktieren Sie unser Support-Team", "Contact Our Support Team")}
+            {"Contact Our Support Team"}
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 mb-8">
@@ -96,7 +88,7 @@ const Contact = () => {
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary" />
                 <div>
-                  <p className="text-sm text-muted-foreground">{t("E-Mail", "Email")}</p>
+                  <p className="text-sm text-muted-foreground">{"Email"}</p>
                   <a href="mailto:info@kyssvision.de" className="text-foreground hover:text-primary transition-colors">
                     info@kyssvision.de
                   </a>
@@ -104,10 +96,10 @@ const Contact = () => {
               </div>
               <div className="mt-6">
                 <p className="text-sm text-muted-foreground mb-2">
-                  {t("Geschäftszeiten", "Business Hours")}
+                  {"Business Hours"}
                 </p>
                 <p className="text-foreground">
-                  {t("Mo-Fr: 08:00-18:00", "Mon-Fri: 08:00-18:00")}
+                  {"Mon-Fri: 08:00-18:00"}
                 </p>
               </div>
             </div>
@@ -115,7 +107,7 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                  {t("Name", "Name")}
+                  {"Name"}
                 </label>
                 <input
                   type="text"
@@ -124,12 +116,12 @@ const Contact = () => {
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                   className="w-full bg-white/[0.05] border-2 border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
-                  placeholder={t("Ihr Name", "Your name")}
+                  placeholder={"Your name"}
                 />
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                  {t("E-Mail", "Email")}
+                  {"Email"}
                 </label>
                 <input
                   type="email"
@@ -138,12 +130,12 @@ const Contact = () => {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
                   className="w-full bg-white/[0.05] border-2 border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
-                  placeholder={t("ihre@email.de", "your@email.com")}
+                  placeholder={"your@email.com"}
                 />
               </div>
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
-                  {t("Betreff", "Subject")}
+                  {"Subject"}
                 </label>
                 <input
                   type="text"
@@ -152,12 +144,12 @@ const Contact = () => {
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   required
                   className="w-full bg-white/[0.05] border-2 border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
-                  placeholder={t("Betreff Ihrer Nachricht", "Subject of your message")}
+                  placeholder={"Subject of your message"}
                 />
               </div>
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                  {t("Nachricht", "Message")}
+                  {"Message"}
                 </label>
                 <textarea
                   id="message"
@@ -166,7 +158,7 @@ const Contact = () => {
                   required
                   rows={4}
                   className="w-full bg-white/[0.05] border-2 border-white/[0.15] rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors resize-none"
-                  placeholder={t("Ihre Nachricht hier...", "Your message here...")}
+                  placeholder={"Your message here..."}
                 />
               </div>
               <button
@@ -175,7 +167,7 @@ const Contact = () => {
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
-                {isSubmitting ? t("Wird gesendet...", "Sending...") : t("Nachricht senden", "Send Message")}
+                {isSubmitting ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

@@ -1,10 +1,8 @@
 import PageLayout from "@/components/PageLayout";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Calendar, ArrowRight } from "lucide-react";
 import { blogPosts } from "@/data/blogData";
 
 const Blog = () => {
-  const { t, language } = useLanguage();
 
   return (
     <PageLayout>
@@ -72,7 +70,7 @@ const Blog = () => {
                       }}
                       className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all text-sm font-medium"
                     >
-                      {t("Weiterlesen", "Read more")}
+                      {"Read more"}
                       <ArrowRight className="w-4 h-4" />
                     </a>
                   </div>

@@ -4,10 +4,8 @@ import ServicesTable from '@/components/admin/ServicesTable';
 import { getAllServices } from '@/lib/database';
 import type { Service } from '@/lib/database';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 const AdminServices = () => {
-  const { t } = useLanguage();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -50,10 +48,10 @@ const AdminServices = () => {
       <div className="p-6 md:p-8">
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-instrument-serif text-foreground mb-2">
-            {t('Services verwalten', 'Manage Services')}
+            {'Manage Services'}
           </h1>
           <p className="text-muted-foreground">
-            {services.length} {t('Services insgesamt', 'Services total')}
+            {services.length} {'Services total'}
           </p>
         </div>
         

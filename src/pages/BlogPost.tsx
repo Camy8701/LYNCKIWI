@@ -1,5 +1,4 @@
 import PageLayout from "@/components/PageLayout";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { useParams } from "react-router-dom";
 import { Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
 import { useState } from "react";
@@ -330,7 +329,6 @@ Timely roof renovation prevents expensive consequential damage. Have your roof c
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { t, language } = useLanguage();
   const { toast } = useToast();
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -342,10 +340,10 @@ const BlogPost = () => {
         <div className="px-4 sm:px-6 lg:px-12 py-12">
           <div className="glass-card rounded-3xl p-8 lg:p-12 max-w-4xl mx-auto text-center">
             <h1 className="text-3xl font-bold text-foreground mb-4">
-              {t("Artikel nicht gefunden", "Article not found")}
+              {"Article not found"}
             </h1>
             <a href="/blog" className="text-primary hover:text-primary/80">
-              {t("Zurück zum Blog", "Back to Blog")}
+              {"Back to Blog"}
             </a>
           </div>
         </div>
@@ -373,8 +371,8 @@ const BlogPost = () => {
       case 'copy':
         navigator.clipboard.writeText(url);
         toast({
-          title: t("Link kopiert", "Link copied"),
-          description: t("Der Link wurde in die Zwischenablage kopiert", "The link has been copied to clipboard")
+          title: "Link copied",
+          description: "The link has been copied to clipboard"
         });
         return;
     }
@@ -455,7 +453,7 @@ const BlogPost = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                {post.readTime} {t("Lesezeit", "read time")}
+                {post.readTime} {"read time"}
               </div>
             </div>
 
@@ -467,7 +465,7 @@ const BlogPost = () => {
             {/* Share Buttons */}
             <div className="flex items-center gap-3 mb-8 pb-8 border-b border-border">
               <span className="text-sm text-muted-foreground">
-                {t("Teilen:", "Share:")}
+                {"Share:"}
               </span>
               <button
                 onClick={() => handleShare('facebook')}
@@ -587,7 +585,7 @@ const BlogPost = () => {
           {relatedPosts.length > 0 && (
             <div className="mt-16">
               <h2 className="text-3xl md:text-4xl tracking-tight text-foreground font-serif font-normal mb-8">
-                {t("Weitere Artikel", "Related Articles")}
+                {"Related Articles"}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedPosts.map((related) => (

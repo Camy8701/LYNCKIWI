@@ -1,5 +1,4 @@
 import { Star } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const getColorClasses = (color: string) => {
   const colorMap: Record<string, { bg: string; text: string; metric: string }> = {
@@ -95,23 +94,19 @@ const testimonials = [
 ];
 
 const TestimonialsSection = () => {
-  const { t, language } = useLanguage();
   
   return (
     <section className="overflow-hidden glass-card rounded-3xl mt-24 mb-20 mx-4 md:mx-6 lg:mx-8">
       <div className="md:px-10 lg:px-14 pt-20 pr-6 pb-16 pl-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground font-serif font-normal">
-            {t("Erfolgreiche Projekte,", "Successful Projects,")}
+            {"Successful Projects,"}
           </h2>
           <h3 className="text-4xl md:text-5xl lg:text-6xl tracking-tight text-muted-foreground font-serif font-normal mb-6">
-            {t("Zufriedene Kunden", "Satisfied Customers")}
+            {"Satisfied Customers"}
           </h3>
           <p className="text-lg text-muted-foreground">
-            {t(
-              "Echte Erfahrungen von Hausbesitzern, die ihre Projekte erfolgreich umgesetzt haben.",
-              "Real experiences from homeowners who successfully completed their projects."
-            )}
+            {"Real experiences from homeowners who successfully completed their projects."}
           </p>
         </div>
 
@@ -151,28 +146,28 @@ const TestimonialsSection = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-                {t("Handverlesene", "Hand-picked")}
+                {"Hand-picked"}
               </div>
               <div className="text-muted-foreground text-sm">
-                {t("Fachleute unter den Besten", "Professionals Among the Best")}
+                {"Professionals Among the Best"}
               </div>
             </div>
             <div>
               <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">4.8</div>
               <div className="text-muted-foreground text-sm">
-                {t("Durchschnittsbewertung", "Average Rating")}
+                {"Average Rating"}
               </div>
             </div>
             <div>
               <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">1.500+</div>
               <div className="text-muted-foreground text-sm">
-                {t("Erfolgreiche Projekte", "Successful Projects")}
+                {"Successful Projects"}
               </div>
             </div>
             <div>
               <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">24h</div>
               <div className="text-muted-foreground text-sm">
-                {t("Durchschnittliche Antwortzeit", "Average Response Time")}
+                {"Average Response Time"}
               </div>
             </div>
           </div>

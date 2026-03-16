@@ -8,44 +8,44 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 245 6% 96%;
-    --foreground: 0 0% 11%;
+    --background: 220 13% 9%;
+    --foreground: 0 0% 96%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 11%;
+    --card: 220 13% 12%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 11%;
+    --popover: 220 13% 10%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 160 84% 39%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 43 87% 45%;
+    --primary-foreground: 0 0% 5%;
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 0 0% 11%;
+    --secondary: 220 13% 16%;
+    --secondary-foreground: 0 0% 96%;
 
-    --muted: 240 5% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 220 13% 16%;
+    --muted-foreground: 0 0% 55%;
 
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 43 87% 45%;
+    --accent-foreground: 0 0% 5%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 160 84% 39%;
+    --border: 220 13% 20%;
+    --input: 220 13% 14%;
+    --ring: 43 87% 45%;
 
     --radius: 1rem;
 
     --sidebar-background: 0 0% 4%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary: 43 87% 45%;
     --sidebar-primary-foreground: 0 0% 0%;
     --sidebar-accent: 0 0% 10%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 10%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-ring: 43 87% 45%;
 
     --glass-bg: 255 255 255 / 0.03;
     --glass-border: 255 255 255 / 0.06;
@@ -62,8 +62,8 @@ All colors MUST be HSL.
     --popover: 0 0% 0%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 160 84% 39%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 43 87% 45%;
+    --primary-foreground: 0 0% 5%;
 
     --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 100%;
@@ -71,24 +71,24 @@ All colors MUST be HSL.
     --muted: 0 0% 10%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 43 87% 45%;
+    --accent-foreground: 0 0% 5%;
 
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 15%;
     --input: 0 0% 5%;
-    --ring: 160 84% 39%;
+    --ring: 43 87% 45%;
 
     --sidebar-background: 0 0% 0%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary: 43 87% 45%;
     --sidebar-primary-foreground: 0 0% 0%;
     --sidebar-accent: 0 0% 10%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 10%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-ring: 43 87% 45%;
 
     --glass-bg: 255 255 255 / 0.03;
     --glass-border: 255 255 255 / 0.06;
@@ -139,10 +139,10 @@ All colors MUST be HSL.
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2),
                 0 20px 40px rgba(0, 0, 0, 0.15),
                 0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-                0 0 25px rgba(16, 185, 129, 0.8),
-                0 0 50px rgba(16, 185, 129, 0.6),
-                0 0 75px rgba(16, 185, 129, 0.4),
-                0 0 100px rgba(16, 185, 129, 0.2);
+                0 0 25px rgba(212, 160, 23, 0.8),
+                0 0 50px rgba(212, 160, 23, 0.6),
+                0 0 75px rgba(212, 160, 23, 0.4),
+                0 0 100px rgba(212, 160, 23, 0.2);
     transform: translateY(-4px);
   }
 
@@ -157,10 +157,10 @@ All colors MUST be HSL.
   .light .glass-card:hover {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1),
                 0 20px 40px rgba(0, 0, 0, 0.08),
-                0 0 25px rgba(16, 185, 129, 0.7),
-                0 0 50px rgba(16, 185, 129, 0.5),
-                0 0 75px rgba(16, 185, 129, 0.35),
-                0 0 100px rgba(16, 185, 129, 0.2);
+                0 0 25px rgba(212, 160, 23, 0.7),
+                0 0 50px rgba(212, 160, 23, 0.5),
+                0 0 75px rgba(212, 160, 23, 0.35),
+                0 0 100px rgba(212, 160, 23, 0.2);
   }
 
   @keyframes smoke {
@@ -191,15 +191,15 @@ All colors MUST be HSL.
 
   @keyframes pulse-glow {
     0%, 100% {
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4),
-                  0 0 40px rgba(16, 185, 129, 0.2),
-                  0 0 60px rgba(16, 185, 129, 0.1);
+      box-shadow: 0 0 20px rgba(212, 160, 23, 0.4),
+                  0 0 40px rgba(212, 160, 23, 0.2),
+                  0 0 60px rgba(212, 160, 23, 0.1);
     }
     50% {
-      box-shadow: 0 0 30px rgba(16, 185, 129, 0.8),
-                  0 0 60px rgba(16, 185, 129, 0.6),
-                  0 0 90px rgba(16, 185, 129, 0.4),
-                  0 0 120px rgba(16, 185, 129, 0.2);
+      box-shadow: 0 0 30px rgba(212, 160, 23, 0.8),
+                  0 0 60px rgba(212, 160, 23, 0.6),
+                  0 0 90px rgba(212, 160, 23, 0.4),
+                  0 0 120px rgba(212, 160, 23, 0.2);
     }
   }
 

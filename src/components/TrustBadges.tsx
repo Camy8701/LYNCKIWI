@@ -1,8 +1,6 @@
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Check } from "lucide-react";
 
 const TrustBadges = () => {
-  const { t } = useLanguage();
 
   const badges = [
     {

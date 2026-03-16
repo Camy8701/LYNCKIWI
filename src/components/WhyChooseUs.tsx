@@ -1,8 +1,6 @@
-import { useLanguage } from "@/contexts/LanguageContext";
 import { CheckCircle2, DollarSign, Zap } from "lucide-react";
 
 const WhyChooseUs = () => {
-  const { t, language } = useLanguage();
 
   const benefits = [
     {
@@ -33,7 +31,7 @@ const WhyChooseUs = () => {
       <div className="glass-card rounded-3xl p-8 lg:p-12">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <h2 className="text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground font-serif font-normal">
-            {t("Warum KYSS Vision?", "Why KYSS Vision?")}
+            {"Why KYSS Vision?"}
           </h2>
         </div>
 

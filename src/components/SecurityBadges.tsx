@@ -1,8 +1,6 @@
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Shield, Lock, Star, Users } from "lucide-react";
 
 const SecurityBadges = () => {
-  const { t } = useLanguage();
 
   const badges = [
     {

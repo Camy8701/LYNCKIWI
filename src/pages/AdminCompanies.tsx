@@ -5,10 +5,8 @@ import CompaniesTable from '@/components/admin/CompaniesTable';
 import { getAllCompanies, getServices, getCities } from '@/lib/database';
 import type { Company, Service, City } from '@/lib/database';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 const AdminCompanies = () => {
-  const { t } = useLanguage();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [cities, setCities] = useState<City[]>([]);
@@ -64,10 +62,10 @@ const AdminCompanies = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl md:text-4xl font-instrument-serif text-foreground mb-2">
-              {t('Unternehmen', 'Companies')}
+              {'Companies'}
             </h1>
             <p className="text-muted-foreground">
-              {companies.length} {t('Unternehmen insgesamt', 'Companies total')}
+              {companies.length} {'Companies total'}
             </p>
           </div>
           <Link
@@ -77,7 +75,7 @@ const AdminCompanies = () => {
             <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M5 12h14"/>
             </svg>
-            {t('Neues Unternehmen', 'New Company')}
+            {'New Company'}
           </Link>
         </div>
         

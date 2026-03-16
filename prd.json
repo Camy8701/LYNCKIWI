@@ -52,7 +52,7 @@
         "npm run build passes"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "Color system only. The components will pick up new colors automatically via Tailwind config."
     },
     {
@@ -68,7 +68,7 @@
         "npm run build passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "This will touch many files. Be thorough \u2014 search for 'useLanguage', 'LanguageContext', 'language', 'de:', 'nameDe', 'titleDe', 'descriptionDe'."
     },
     {

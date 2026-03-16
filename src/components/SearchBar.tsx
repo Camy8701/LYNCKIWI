@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { Search, Flame, MapPin } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getIconComponent } from "@/lib/serviceIcons";
 
@@ -18,7 +17,6 @@ interface City {
 }
 
 export const SearchBar = () => {
-  const { language, t } = useLanguage();
   const [query, setQuery] = useState("");
   const [services, setServices] = useState<Service[]>([]);
   const [cities, setCities] = useState<City[]>([]);
@@ -104,7 +102,7 @@ export const SearchBar = () => {
             setIsOpen(true);
           }
         }}
-        placeholder={t("Service oder Stadt suchen...", "Search service or city...")}
+        placeholder={"Search service or city..."}
         className="bg-white/[0.03] border border-white/[0.06] rounded-lg px-4 py-2 pl-10 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 w-full transition-all duration-300"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
@@ -116,7 +114,7 @@ export const SearchBar = () => {
           {filteredServices.length > 0 && (
             <div className="p-2">
               <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t("Dienstleistungen", "Services")}
+                {"Services"}
               </div>
               {filteredServices.map((service) => {
                 const IconComponent = getIconComponent(service.icon);
@@ -140,7 +138,7 @@ export const SearchBar = () => {
           {filteredCities.length > 0 && (
             <div className="p-2 border-t border-border">
               <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t("Städte", "Cities")}
+                {"Cities"}
               </div>
               {filteredCities.map((city) => (
                 <button
@@ -158,7 +156,7 @@ export const SearchBar = () => {
           {/* No Results */}
           {query.trim().length >= 2 && filteredServices.length === 0 && filteredCities.length === 0 && (
             <div className="p-6 text-center text-sm text-muted-foreground">
-              {t("Keine Ergebnisse gefunden", "No results found")}
+              {"No results found"}
             </div>
           )}
         </div>
