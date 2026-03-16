@@ -23,28 +23,32 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-// Work Discovery Pages (US-030, US-031, US-032)
+// Work Discovery Pages
 const FindWork = lazy(() => import("./pages/FindWork"));
 const CategoryPools = lazy(() => import("./pages/CategoryPools"));
 const PoolDetail = lazy(() => import("./pages/PoolDetail"));
 
-// Worker Portal Pages (US-036, US-037, US-038, US-039, US-040)
+// Worker Portal Pages
 const ProfileWizard = lazy(() => import("./pages/worker/ProfileWizard"));
 const WorkerDashboard = lazy(() => import("./pages/worker/Dashboard"));
 const MyPools = lazy(() => import("./pages/worker/MyPools"));
 const WorkerMessages = lazy(() => import("./pages/worker/Messages"));
 const WorkerNotifications = lazy(() => import("./pages/worker/Notifications"));
 
-// Admin Pages (existing — will be rebuilt in US-043–050)
+// Employer Portal Pages (US-041, US-042)
+const EmployerDashboard = lazy(() => import("./pages/employer/Dashboard"));
+const EmployerPoolManagement = lazy(() => import("./pages/employer/PoolManagement"));
+
+// Admin Pages (US-043–050)
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const AdminLeads = lazy(() => import("./pages/AdminLeads"));
-const AdminLeadDetail = lazy(() => import("./pages/AdminLeadDetail"));
-const AdminMessages = lazy(() => import("./pages/AdminMessages"));
-const AdminCompanies = lazy(() => import("./pages/AdminCompanies"));
-const AdminCompanyForm = lazy(() => import("./pages/AdminCompanyForm"));
-const AdminServices = lazy(() => import("./pages/AdminServices"));
-const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
+const AdminDashboardKYSS = lazy(() => import("./pages/admin/Dashboard"));
+const AdminWorkers = lazy(() => import("./pages/admin/Workers"));
+const AdminEmployers = lazy(() => import("./pages/admin/Employers"));
+const AdminPools = lazy(() => import("./pages/admin/Pools"));
+const AdminRevenue = lazy(() => import("./pages/admin/Revenue"));
+const AdminProspects = lazy(() => import("./pages/admin/Prospects"));
+const AdminFlaggedContent = lazy(() => import("./pages/admin/FlaggedContent"));
+const AdminActivityLog = lazy(() => import("./pages/admin/ActivityLog"));
 
 // Loading fallback
 const PageLoader = () => (
@@ -82,28 +86,33 @@ const App = () => (
                 <Route path="/auth/sign-in" element={<SignIn />} />
                 <Route path="/auth/sign-up" element={<SignUp />} />
 
-                {/* WORK DISCOVERY (US-030, US-031, US-032) */}
+                {/* WORK DISCOVERY */}
                 <Route path="/find-work" element={<FindWork />} />
                 <Route path="/find-work/:slug" element={<CategoryPools />} />
                 <Route path="/pools/:id" element={<PoolDetail />} />
 
-                {/* WORKER PORTAL (US-036–040) */}
+                {/* WORKER PORTAL */}
                 <Route path="/worker/profile-wizard" element={<ProtectedRoute requiredRole="worker"><ProfileWizard /></ProtectedRoute>} />
                 <Route path="/worker/dashboard" element={<ProtectedRoute requiredRole="worker"><WorkerDashboard /></ProtectedRoute>} />
                 <Route path="/worker/pools" element={<ProtectedRoute requiredRole="worker"><MyPools /></ProtectedRoute>} />
                 <Route path="/worker/messages" element={<ProtectedRoute requiredRole="worker"><WorkerMessages /></ProtectedRoute>} />
                 <Route path="/worker/notifications" element={<ProtectedRoute requiredRole="worker"><WorkerNotifications /></ProtectedRoute>} />
 
-                {/* ADMIN ROUTES (existing — rebuilt in US-043–050) */}
+                {/* EMPLOYER PORTAL */}
+                <Route path="/employer/dashboard" element={<ProtectedRoute requiredRole="employer"><EmployerDashboard /></ProtectedRoute>} />
+                <Route path="/employer/pools" element={<ProtectedRoute requiredRole="employer"><EmployerDashboard /></ProtectedRoute>} />
+                <Route path="/employer/pools/:id" element={<ProtectedRoute requiredRole="employer"><EmployerPoolManagement /></ProtectedRoute>} />
+
+                {/* ADMIN ROUTES */}
                 <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
-                <Route path="/admin/leads" element={<ProtectedRoute requiredRole="admin"><AdminLeads /></ProtectedRoute>} />
-                <Route path="/admin/leads/:id" element={<ProtectedRoute requiredRole="admin"><AdminLeadDetail /></ProtectedRoute>} />
-                <Route path="/admin/messages" element={<ProtectedRoute requiredRole="admin"><AdminMessages /></ProtectedRoute>} />
-                <Route path="/admin/companies" element={<ProtectedRoute requiredRole="admin"><AdminCompanies /></ProtectedRoute>} />
-                <Route path="/admin/companies/:id" element={<ProtectedRoute requiredRole="admin"><AdminCompanyForm /></ProtectedRoute>} />
-                <Route path="/admin/services" element={<ProtectedRoute requiredRole="admin"><AdminServices /></ProtectedRoute>} />
-                <Route path="/admin/analytics" element={<ProtectedRoute requiredRole="admin"><AdminAnalytics /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboardKYSS /></ProtectedRoute>} />
+                <Route path="/admin/workers" element={<ProtectedRoute requiredRole="admin"><AdminWorkers /></ProtectedRoute>} />
+                <Route path="/admin/employers" element={<ProtectedRoute requiredRole="admin"><AdminEmployers /></ProtectedRoute>} />
+                <Route path="/admin/pools" element={<ProtectedRoute requiredRole="admin"><AdminPools /></ProtectedRoute>} />
+                <Route path="/admin/revenue" element={<ProtectedRoute requiredRole="admin"><AdminRevenue /></ProtectedRoute>} />
+                <Route path="/admin/prospects" element={<ProtectedRoute requiredRole="admin"><AdminProspects /></ProtectedRoute>} />
+                <Route path="/admin/flagged" element={<ProtectedRoute requiredRole="admin"><AdminFlaggedContent /></ProtectedRoute>} />
+                <Route path="/admin/activity" element={<ProtectedRoute requiredRole="admin"><AdminActivityLog /></ProtectedRoute>} />
 
                 {/* CATCH-ALL */}
                 <Route path="*" element={<NotFound />} />

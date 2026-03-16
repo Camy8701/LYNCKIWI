@@ -719,7 +719,7 @@
         "npm run build passes"
       ],
       "priority": 41,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -735,7 +735,7 @@
         "npm run build passes"
       ],
       "priority": 42,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -752,7 +752,7 @@
         "npm run build passes"
       ],
       "priority": 43,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -769,7 +769,7 @@
         "npm run build passes"
       ],
       "priority": 44,
-      "passes": false,
+      "passes": true,
       "notes": "Transform patterns from existing AdminLeads.tsx and LeadsTable.tsx."
     },
     {
@@ -786,7 +786,7 @@
         "npm run build passes"
       ],
       "priority": 45,
-      "passes": false,
+      "passes": true,
       "notes": "The admin pool create form is the most important admin page \u2014 this is how you set up employers."
     },
     {
@@ -801,7 +801,7 @@
         "npm run build passes"
       ],
       "priority": 46,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -818,7 +818,7 @@
         "npm run build passes"
       ],
       "priority": 47,
-      "passes": false,
+      "passes": true,
       "notes": "This is a critical business page \u2014 it shows exactly how much money the platform is generating."
     },
     {
@@ -836,7 +836,7 @@
         "npm run build passes"
       ],
       "priority": 48,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -854,7 +854,7 @@
         "npm run build passes"
       ],
       "priority": 49,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -871,7 +871,7 @@
         "npm run build passes"
       ],
       "priority": 50,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
