@@ -889,7 +889,7 @@
         "npm run build passes"
       ],
       "priority": 51,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -906,7 +906,7 @@
         "npm run build passes"
       ],
       "priority": 52,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -923,7 +923,7 @@
         "npm run build passes"
       ],
       "priority": 53,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -938,7 +938,7 @@
         "npm run build passes"
       ],
       "priority": 54,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -955,7 +955,7 @@
         "npm run build passes"
       ],
       "priority": 55,
-      "passes": false,
+      "passes": true,
       "notes": "This is the SEO landing page for each work type \u2014 helps with organic search traffic."
     },
     {
@@ -972,7 +972,7 @@
         "npm run build passes"
       ],
       "priority": 56,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -989,7 +989,7 @@
         "npm run build passes"
       ],
       "priority": 57,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -1005,7 +1005,7 @@
         "npm run build passes"
       ],
       "priority": 58,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -1022,7 +1022,7 @@
         "npm run build passes"
       ],
       "priority": 59,
-      "passes": false,
+      "passes": true,
       "notes": "Use a horizontal timeline or Gantt-chart style visualization."
     },
     {
@@ -1038,7 +1038,7 @@
         "npm run build passes"
       ],
       "priority": 60,
-      "passes": false,
+      "passes": true,
       "notes": "Keep the CMS simple \u2014 no need for a full rich text editor. Markdown textarea is fine for MVP."
     },
     {
@@ -1054,7 +1054,7 @@
         "npm run build passes"
       ],
       "priority": 61,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -1069,7 +1069,7 @@
         "npm run build passes"
       ],
       "priority": 62,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -1087,7 +1087,7 @@
         "npm run build passes with zero errors and zero warnings"
       ],
       "priority": 63,
-      "passes": false,
+      "passes": true,
       "notes": "Final polish story. Fix everything that's broken from previous stories."
     },
     {
@@ -1102,7 +1102,7 @@
         "npm run build passes"
       ],
       "priority": 64,
-      "passes": false,
+      "passes": true,
       "notes": "Last story. Clean documentation for anyone who works on the codebase next."
     }
   ]

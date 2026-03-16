@@ -23,6 +23,14 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
+// New Public Pages (US-051 to US-055)
+const ForEmployers = lazy(() => import("./pages/ForEmployers"));
+const HowItWorks = lazy(() => import("./pages/HowItWorks"));
+const Guide = lazy(() => import("./pages/Guide"));
+const GuideArticle = lazy(() => import("./pages/GuideArticle"));
+const WorkTypeDetail = lazy(() => import("./pages/WorkTypeDetail"));
+const SeasonalCalendar = lazy(() => import("./pages/SeasonalCalendar"));
+
 // Work Discovery Pages
 const FindWork = lazy(() => import("./pages/FindWork"));
 const CategoryPools = lazy(() => import("./pages/CategoryPools"));
@@ -34,12 +42,15 @@ const WorkerDashboard = lazy(() => import("./pages/worker/Dashboard"));
 const MyPools = lazy(() => import("./pages/worker/MyPools"));
 const WorkerMessages = lazy(() => import("./pages/worker/Messages"));
 const WorkerNotifications = lazy(() => import("./pages/worker/Notifications"));
+const WorkerSettings = lazy(() => import("./pages/worker/Settings"));
+const WorkerProfile = lazy(() => import("./pages/worker/Profile"));
 
-// Employer Portal Pages (US-041, US-042)
+// Employer Portal Pages
 const EmployerDashboard = lazy(() => import("./pages/employer/Dashboard"));
 const EmployerPoolManagement = lazy(() => import("./pages/employer/PoolManagement"));
+const EmployerProfile = lazy(() => import("./pages/employer/Profile"));
 
-// Admin Pages (US-043–050)
+// Admin Pages
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboardKYSS = lazy(() => import("./pages/admin/Dashboard"));
 const AdminWorkers = lazy(() => import("./pages/admin/Workers"));
@@ -49,6 +60,7 @@ const AdminRevenue = lazy(() => import("./pages/admin/Revenue"));
 const AdminProspects = lazy(() => import("./pages/admin/Prospects"));
 const AdminFlaggedContent = lazy(() => import("./pages/admin/FlaggedContent"));
 const AdminActivityLog = lazy(() => import("./pages/admin/ActivityLog"));
+const AdminBlogCMS = lazy(() => import("./pages/admin/BlogCMS"));
 
 // Loading fallback
 const PageLoader = () => (
@@ -82,6 +94,14 @@ const App = () => (
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
 
+                {/* NEW PUBLIC PAGES (US-051 to US-055, US-059) */}
+                <Route path="/for-employers" element={<ForEmployers />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
+                <Route path="/guide" element={<Guide />} />
+                <Route path="/guide/:slug" element={<GuideArticle />} />
+                <Route path="/work/:slug" element={<WorkTypeDetail />} />
+                <Route path="/seasonal-calendar" element={<SeasonalCalendar />} />
+
                 {/* AUTH ROUTES */}
                 <Route path="/auth/sign-in" element={<SignIn />} />
                 <Route path="/auth/sign-up" element={<SignUp />} />
@@ -97,11 +117,14 @@ const App = () => (
                 <Route path="/worker/pools" element={<ProtectedRoute requiredRole="worker"><MyPools /></ProtectedRoute>} />
                 <Route path="/worker/messages" element={<ProtectedRoute requiredRole="worker"><WorkerMessages /></ProtectedRoute>} />
                 <Route path="/worker/notifications" element={<ProtectedRoute requiredRole="worker"><WorkerNotifications /></ProtectedRoute>} />
+                <Route path="/worker/settings" element={<ProtectedRoute requiredRole="worker"><WorkerSettings /></ProtectedRoute>} />
+                <Route path="/worker/profile" element={<ProtectedRoute requiredRole="worker"><WorkerProfile /></ProtectedRoute>} />
 
                 {/* EMPLOYER PORTAL */}
                 <Route path="/employer/dashboard" element={<ProtectedRoute requiredRole="employer"><EmployerDashboard /></ProtectedRoute>} />
                 <Route path="/employer/pools" element={<ProtectedRoute requiredRole="employer"><EmployerDashboard /></ProtectedRoute>} />
                 <Route path="/employer/pools/:id" element={<ProtectedRoute requiredRole="employer"><EmployerPoolManagement /></ProtectedRoute>} />
+                <Route path="/employer/profile" element={<ProtectedRoute requiredRole="employer"><EmployerProfile /></ProtectedRoute>} />
 
                 {/* ADMIN ROUTES */}
                 <Route path="/admin/login" element={<AdminLogin />} />
@@ -113,6 +136,7 @@ const App = () => (
                 <Route path="/admin/prospects" element={<ProtectedRoute requiredRole="admin"><AdminProspects /></ProtectedRoute>} />
                 <Route path="/admin/flagged" element={<ProtectedRoute requiredRole="admin"><AdminFlaggedContent /></ProtectedRoute>} />
                 <Route path="/admin/activity" element={<ProtectedRoute requiredRole="admin"><AdminActivityLog /></ProtectedRoute>} />
+                <Route path="/admin/blog-cms" element={<ProtectedRoute requiredRole="admin"><AdminBlogCMS /></ProtectedRoute>} />
 
                 {/* CATCH-ALL */}
                 <Route path="*" element={<NotFound />} />
