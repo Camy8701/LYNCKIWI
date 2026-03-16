@@ -1,68 +1,43 @@
-import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { getSession, isAdmin } from '@/lib/auth';
+// ============================================================
+// KYSS Vision — ProtectedRoute
+// US-013: Role-based route protection for worker/employer/admin
+// ============================================================
+
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
+import { UserRole } from '@/integrations/supabase/types'
+import { Loader2 } from 'lucide-react'
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children: React.ReactNode
+  requiredRole?: UserRole | UserRole[]
 }
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [hasAdminRole, setHasAdminRole] = useState(false);
+const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
+  const { isAuthenticated, isLoading, role } = useAuth()
 
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        // First check if user has a valid session
-        const session = await getSession();
-        const authenticated = session !== null;
-        setIsAuthenticated(authenticated);
-
-        // If authenticated, verify they have admin role
-        if (authenticated) {
-          const adminStatus = await isAdmin();
-          setHasAdminRole(adminStatus);
-        }
-      } catch (error) {
-        console.error('Auth check error:', error);
-        setIsAuthenticated(false);
-        setHasAdminRole(false);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    checkAuth();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-foreground">Laden...</div>
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
-    );
+    )
   }
 
-  // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/auth/sign-in" replace />
   }
 
-  // Redirect to home if authenticated but not admin
-  if (!hasAdminRole) {
-    return (
-      <Navigate
-        to="/"
-        replace
-        state={{
-          message: 'Sie haben keine Berechtigung, auf den Admin-Bereich zuzugreifen.'
-        }}
-      />
-    );
+  if (requiredRole) {
+    const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole]
+    if (!role || !allowedRoles.includes(role)) {
+      if (role === 'admin') return <Navigate to="/admin" replace />
+      if (role === 'employer') return <Navigate to="/employer/dashboard" replace />
+      return <Navigate to="/dashboard" replace />
+    }
   }
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+}
 
-export default ProtectedRoute;
+export default ProtectedRoute

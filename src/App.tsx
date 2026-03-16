@@ -7,6 +7,11 @@ import { HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense } from "react";
 import CookieConsent from "./components/CookieConsent";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "@/contexts/AuthContext";
+
+// Auth Pages
+const SignIn = lazy(() => import("./pages/auth/SignIn"));
+const SignUp = lazy(() => import("./pages/auth/SignUp"));
 
 // Lazy load all pages for code splitting and better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -53,6 +58,7 @@ const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <AuthProvider>
           <Toaster />
           <Sonner />
           <CookieConsent />
@@ -61,6 +67,10 @@ const App = () => (
               <Routes>
                 {/* PUBLIC ROUTES */}
                 <Route path="/" element={<Index />} />
+
+                {/* AUTH ROUTES */}
+                <Route path="/auth/sign-in" element={<SignIn />} />
+                <Route path="/auth/sign-up" element={<SignUp />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
@@ -70,20 +80,21 @@ const App = () => (
 
                 {/* ADMIN ROUTES (existing, will be rebuilt in US-043–050) */}
                 <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-                <Route path="/admin/leads" element={<ProtectedRoute><AdminLeads /></ProtectedRoute>} />
-                <Route path="/admin/leads/:id" element={<ProtectedRoute><AdminLeadDetail /></ProtectedRoute>} />
-                <Route path="/admin/messages" element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
-                <Route path="/admin/companies" element={<ProtectedRoute><AdminCompanies /></ProtectedRoute>} />
-                <Route path="/admin/companies/:id" element={<ProtectedRoute><AdminCompanyForm /></ProtectedRoute>} />
-                <Route path="/admin/services" element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
-                <Route path="/admin/analytics" element={<ProtectedRoute><AdminAnalytics /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
+                <Route path="/admin/leads" element={<ProtectedRoute requiredRole="admin"><AdminLeads /></ProtectedRoute>} />
+                <Route path="/admin/leads/:id" element={<ProtectedRoute requiredRole="admin"><AdminLeadDetail /></ProtectedRoute>} />
+                <Route path="/admin/messages" element={<ProtectedRoute requiredRole="admin"><AdminMessages /></ProtectedRoute>} />
+                <Route path="/admin/companies" element={<ProtectedRoute requiredRole="admin"><AdminCompanies /></ProtectedRoute>} />
+                <Route path="/admin/companies/:id" element={<ProtectedRoute requiredRole="admin"><AdminCompanyForm /></ProtectedRoute>} />
+                <Route path="/admin/services" element={<ProtectedRoute requiredRole="admin"><AdminServices /></ProtectedRoute>} />
+                <Route path="/admin/analytics" element={<ProtectedRoute requiredRole="admin"><AdminAnalytics /></ProtectedRoute>} />
 
                 {/* CATCH-ALL */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
           </BrowserRouter>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>

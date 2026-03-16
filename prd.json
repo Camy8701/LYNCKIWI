@@ -176,7 +176,7 @@
         "npm run build passes (may have import errors from deleted files \u2014 fix any remaining broken imports in App.tsx)"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "If you can't run supabase gen types, manually write the TypeScript types matching the SQL schema."
     },
     {
@@ -193,7 +193,7 @@
         "npm run build passes"
       ],
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "notes": "This is the foundation for all protected routes. Keep it clean and simple."
     },
     {
@@ -212,7 +212,7 @@
         "npm run build passes"
       ],
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -231,7 +231,7 @@
         "npm run build passes"
       ],
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -246,7 +246,7 @@
         "npm run build passes"
       ],
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "notes": "See kyss_manus_transformation_prompt.md Phase 7 for exact content. See kyss_transformation_blueprint.md for testimonial text."
     },
     {
@@ -268,7 +268,7 @@
         "npm run build passes"
       ],
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "notes": "This is a large file but it's all Supabase query functions. No UI. See PRD Section 5 for the full API endpoint list \u2014 each endpoint maps to a function here."
     },
     {
@@ -283,7 +283,7 @@
         "npm run build passes"
       ],
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
