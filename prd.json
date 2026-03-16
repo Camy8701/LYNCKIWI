@@ -88,7 +88,7 @@
         "Migration runs successfully against Supabase"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "See kyss_prd_v1.md Section 3 for exact field definitions. Use PostgreSQL native types."
     },
     {
@@ -105,7 +105,7 @@
         "Migration runs successfully"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "See PRD Section 3 for exact field types. pool_status enum: open, almost_full, closed, archived."
     },
     {
@@ -123,7 +123,7 @@
         "Migration runs successfully"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -139,7 +139,7 @@
         "Migration runs successfully"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -162,7 +162,7 @@
         "Migration runs successfully"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "RLS is critical for security. Test that unauthorized access is properly blocked."
     },
     {
