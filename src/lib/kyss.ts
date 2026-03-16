@@ -206,7 +206,7 @@ export async function updateEmployerProfile(
 // NOTIFICATIONS
 // ──────────────────────────────────────────────────────────
 
-export async function getNotifications(userId: string): Promise<Notification[]> {
+export async function getNotifications(userId: string, limit?: number): Promise<Notification[]> {
   const { data, error } = await supabase
     .from('notifications')
     .select('*')
@@ -296,4 +296,94 @@ export function getPoolStatusLabel(status: string): string {
 export function getCapacityPercent(current: number, max: number): number {
   if (max === 0) return 0
   return Math.round((current / max) * 100)
+}
+
+// ─── Pools (extended) ─────────────────────────────────────────────────────────
+
+export async function getPools(filters?: {
+  categorySlug?: string
+  status?: string
+  country?: string
+  region?: string
+}): Promise<WorkPool[]> {
+  let query = supabase.from('work_pools').select('*')
+  if (filters?.status) query = query.eq('status', filters.status)
+  if (filters?.country) query = query.eq('country', filters.country)
+  if (filters?.region) query = query.ilike('region', `%${filters.region}%`)
+  if (filters?.categorySlug) {
+    // Look up category id by slug first
+    const { data: cat } = await supabase
+      .from('work_type_categories')
+      .select('id')
+      .eq('slug', filters.categorySlug)
+      .maybeSingle()
+    if (cat?.id) query = query.eq('work_type_category_id', cat.id)
+  }
+  const { data, error } = await query.order('created_at', { ascending: false })
+  if (error) { console.error('getPools:', error); return [] }
+  return (data || []) as WorkPool[]
+}
+
+export async function getWorkerPools(userId: string): Promise<WorkPool[]> {
+  const { data, error } = await supabase
+    .from('pool_memberships')
+    .select('work_pools(*)')
+    .eq('worker_id', userId)
+    .eq('status', 'active')
+  if (error) { console.error('getWorkerPools:', error); return [] }
+  return ((data || []).map((m: any) => m.work_pools).filter(Boolean)) as WorkPool[]
+}
+
+// ─── Pool Feed ────────────────────────────────────────────────────────────────
+
+export async function getPoolPosts(poolId: string): Promise<PoolPost[]> {
+  const { data, error } = await supabase
+    .from('pool_posts')
+    .select('*')
+    .eq('pool_id', poolId)
+    .order('created_at', { ascending: false })
+  if (error) { console.error('getPoolPosts:', error); return [] }
+  return (data || []) as PoolPost[]
+}
+
+export async function createPoolPost(poolId: string, authorId: string, content: string): Promise<void> {
+  await supabase.from('pool_posts').insert({ pool_id: poolId, author_id: authorId, content })
+}
+
+// ─── Reviews ─────────────────────────────────────────────────────────────────
+
+export async function getPoolReviews(poolId: string): Promise<Review[]> {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('pool_id', poolId)
+    .order('created_at', { ascending: false })
+  if (error) { console.error('getPoolReviews:', error); return [] }
+  return (data || []) as Review[]
+}
+
+// ─── Messaging ────────────────────────────────────────────────────────────────
+
+export async function getConversations(userId: string): Promise<Conversation[]> {
+  const { data, error } = await supabase
+    .from('conversations')
+    .select('*')
+    .or(`worker_id.eq.${userId},employer_id.eq.${userId}`)
+    .order('updated_at', { ascending: false })
+  if (error) { console.error('getConversations:', error); return [] }
+  return (data || []) as Conversation[]
+}
+
+export async function getMessages(conversationId: string): Promise<Message[]> {
+  const { data, error } = await supabase
+    .from('messages')
+    .select('*')
+    .eq('conversation_id', conversationId)
+    .order('created_at', { ascending: true })
+  if (error) { console.error('getMessages:', error); return [] }
+  return (data || []) as Message[]
+}
+
+export async function sendMessage(conversationId: string, senderId: string, content: string): Promise<void> {
+  await supabase.from('messages').insert({ conversation_id: conversationId, sender_id: senderId, content })
 }

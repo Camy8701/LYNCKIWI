@@ -517,7 +517,7 @@
         "npm run build passes"
       ],
       "priority": 30,
-      "passes": false,
+      "passes": true,
       "notes": "This is the first page workers see after completing their profile."
     },
     {
@@ -539,7 +539,7 @@
         "npm run build passes"
       ],
       "priority": 31,
-      "passes": false,
+      "passes": true,
       "notes": "This is the critical navigation step: Category \u2192 Pools. Open pools joinable, closed pools visible but grayed out."
     },
     {
@@ -558,7 +558,7 @@
         "npm run build passes"
       ],
       "priority": 32,
-      "passes": false,
+      "passes": true,
       "notes": "The join button logic will be implemented in the next story."
     },
     {
@@ -576,7 +576,7 @@
         "npm run build passes"
       ],
       "priority": 33,
-      "passes": false,
+      "passes": true,
       "notes": "See PRD Section 7 for all edge cases and validation rules. Use database-level locking for race condition protection."
     },
     {
@@ -594,7 +594,7 @@
         "npm run build passes"
       ],
       "priority": 34,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -611,7 +611,7 @@
         "npm run build passes"
       ],
       "priority": 35,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -634,7 +634,7 @@
         "npm run build passes"
       ],
       "priority": 36,
-      "passes": false,
+      "passes": true,
       "notes": "This is a large page. Use a step state machine (useState for currentStep). Each step is a sub-component."
     },
     {
@@ -651,7 +651,7 @@
         "npm run build passes"
       ],
       "priority": 37,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -667,7 +667,7 @@
         "npm run build passes"
       ],
       "priority": 38,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -686,7 +686,7 @@
         "npm run build passes"
       ],
       "priority": 39,
-      "passes": false,
+      "passes": true,
       "notes": "This component is shared between worker and employer. The page wrapper differs but the components are the same."
     },
     {
@@ -702,7 +702,7 @@
         "npm run build passes"
       ],
       "priority": 40,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {

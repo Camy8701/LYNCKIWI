@@ -13,21 +13,29 @@ import { AuthProvider } from "@/contexts/AuthContext";
 const SignIn = lazy(() => import("./pages/auth/SignIn"));
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
 
-// Lazy load all pages for code splitting and better performance
+// Public Pages
 const Index = lazy(() => import("./pages/Index"));
-// const ForBusinesses = lazy(() => import("./pages/ForBusinesses")); // DELETED US-001 → ForEmployers US-051
-// const About = lazy(() => import("./pages/About")); // DELETED US-001 → rewritten
 const Contact = lazy(() => import("./pages/Contact"));
-// const QuoteRequest = lazy(() => import("./pages/QuoteRequest")); // DELETED US-001 → pool join flow
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
-// const Impressum = lazy(() => import("./pages/Impressum")); // DELETED US-001
 const Cookies = lazy(() => import("./pages/Cookies"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
-// const ServiceDetail = lazy(() => import("./pages/ServiceDetail")); // DELETED US-001 → WorkTypeDetail US-055
-// const ThankYou = lazy(() => import("./pages/ThankYou")); // DELETED US-001
 const NotFound = lazy(() => import("./pages/NotFound"));
+
+// Work Discovery Pages (US-030, US-031, US-032)
+const FindWork = lazy(() => import("./pages/FindWork"));
+const CategoryPools = lazy(() => import("./pages/CategoryPools"));
+const PoolDetail = lazy(() => import("./pages/PoolDetail"));
+
+// Worker Portal Pages (US-036, US-037, US-038, US-039, US-040)
+const ProfileWizard = lazy(() => import("./pages/worker/ProfileWizard"));
+const WorkerDashboard = lazy(() => import("./pages/worker/Dashboard"));
+const MyPools = lazy(() => import("./pages/worker/MyPools"));
+const WorkerMessages = lazy(() => import("./pages/worker/Messages"));
+const WorkerNotifications = lazy(() => import("./pages/worker/Notifications"));
+
+// Admin Pages (existing — will be rebuilt in US-043–050)
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminLeads = lazy(() => import("./pages/AdminLeads"));
@@ -36,13 +44,9 @@ const AdminMessages = lazy(() => import("./pages/AdminMessages"));
 const AdminCompanies = lazy(() => import("./pages/AdminCompanies"));
 const AdminCompanyForm = lazy(() => import("./pages/AdminCompanyForm"));
 const AdminServices = lazy(() => import("./pages/AdminServices"));
-// const AdminAds = lazy(() => import("./pages/AdminAds")); // DELETED US-001
-// const AdminAdDetail = lazy(() => import("./pages/AdminAdDetail")); // DELETED US-001
 const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
-// const Advertise = lazy(() => import("./pages/Advertise")); // DELETED US-001
-// const AdvertiseCreate = lazy(() => import("./pages/AdvertiseCreate")); // DELETED US-001
 
-// Loading fallback component
+// Loading fallback
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
     <div className="text-center">
@@ -67,10 +71,6 @@ const App = () => (
               <Routes>
                 {/* PUBLIC ROUTES */}
                 <Route path="/" element={<Index />} />
-
-                {/* AUTH ROUTES */}
-                <Route path="/auth/sign-in" element={<SignIn />} />
-                <Route path="/auth/sign-up" element={<SignUp />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
@@ -78,7 +78,23 @@ const App = () => (
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
 
-                {/* ADMIN ROUTES (existing, will be rebuilt in US-043–050) */}
+                {/* AUTH ROUTES */}
+                <Route path="/auth/sign-in" element={<SignIn />} />
+                <Route path="/auth/sign-up" element={<SignUp />} />
+
+                {/* WORK DISCOVERY (US-030, US-031, US-032) */}
+                <Route path="/find-work" element={<FindWork />} />
+                <Route path="/find-work/:slug" element={<CategoryPools />} />
+                <Route path="/pools/:id" element={<PoolDetail />} />
+
+                {/* WORKER PORTAL (US-036–040) */}
+                <Route path="/worker/profile-wizard" element={<ProtectedRoute requiredRole="worker"><ProfileWizard /></ProtectedRoute>} />
+                <Route path="/worker/dashboard" element={<ProtectedRoute requiredRole="worker"><WorkerDashboard /></ProtectedRoute>} />
+                <Route path="/worker/pools" element={<ProtectedRoute requiredRole="worker"><MyPools /></ProtectedRoute>} />
+                <Route path="/worker/messages" element={<ProtectedRoute requiredRole="worker"><WorkerMessages /></ProtectedRoute>} />
+                <Route path="/worker/notifications" element={<ProtectedRoute requiredRole="worker"><WorkerNotifications /></ProtectedRoute>} />
+
+                {/* ADMIN ROUTES (existing — rebuilt in US-043–050) */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/admin/leads" element={<ProtectedRoute requiredRole="admin"><AdminLeads /></ProtectedRoute>} />
