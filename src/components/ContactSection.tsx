@@ -1,30 +1,28 @@
-import { Wrench, Phone } from "lucide-react";
+// KYSS Vision — ContactSection CTA (US-023)
+import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
 
-const ContactSection = () => {
-  
+export default function ContactSection() {
   return (
-    <section id="consultation" className="mt-24 px-4 sm:px-6 lg:px-12 mb-16">
-      <div className="glass-card rounded-3xl p-8 lg:p-12">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl tracking-tight text-foreground font-serif font-normal mb-4">
-            {"Ready for Your Project?"}
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            {"Request your free quote now"}
-          </p>
-          <div className="flex justify-center">
-            <a
-              href="/#services"
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl text-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30"
-            >
-              <Wrench className="w-5 h-5 stroke-[1.5] group-hover:scale-110 transition-transform duration-300" />
-              {"Request Quote"}
-            </a>
-          </div>
+    <section className="py-20 bg-background">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+          Ready to Start Your Next Adventure?
+        </h2>
+        <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+          Join thousands of backpackers finding safe, verified seasonal work across New Zealand and Australia.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8" asChild>
+            <Link to="/auth/sign-up">Get Started Free <ArrowRight className="ml-2 w-4 h-4" /></Link>
+          </Button>
+          <Button size="lg" variant="outline" className="px-8" asChild>
+            <Link to="/how-it-works">Learn How It Works</Link>
+          </Button>
         </div>
+        <p className="text-xs text-muted-foreground mt-6">Free to join · No credit card required · Working holiday visa friendly</p>
       </div>
     </section>
-  );
-};
-
-export default ContactSection;
+  )
+}

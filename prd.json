@@ -302,7 +302,7 @@
         "npm run build passes"
       ],
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "notes": "Use existing shadcn/ui NavigationMenu, DropdownMenu, and Sheet components."
     },
     {
@@ -319,7 +319,7 @@
         "npm run build passes"
       ],
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -338,7 +338,7 @@
         "npm run build passes"
       ],
       "priority": 19,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -353,7 +353,7 @@
         "npm run build passes"
       ],
       "priority": 20,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -369,7 +369,7 @@
         "npm run build passes"
       ],
       "priority": 21,
-      "passes": false,
+      "passes": true,
       "notes": "Use testimonial content from kyss_transformation_blueprint.md"
     },
     {
@@ -384,7 +384,7 @@
         "npm run build passes"
       ],
       "priority": 22,
-      "passes": false,
+      "passes": true,
       "notes": "This component is reused in both the public landing page (/work types section) and the logged-in /find-work page."
     },
     {
@@ -400,7 +400,7 @@
         "npm run build passes"
       ],
       "priority": 23,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -416,7 +416,7 @@
         "npm run build passes"
       ],
       "priority": 24,
-      "passes": false,
+      "passes": true,
       "notes": "This is the public-facing marketing page. It should look professional and complete."
     },
     {
@@ -434,7 +434,7 @@
         "npm run build passes"
       ],
       "priority": 25,
-      "passes": false,
+      "passes": true,
       "notes": "Create minimal placeholder components for pages not yet built. We'll flesh them out in subsequent stories."
     },
     {
@@ -452,7 +452,7 @@
         "npm run build passes"
       ],
       "priority": 26,
-      "passes": false,
+      "passes": true,
       "notes": "Reference the NovaCast sidebar screenshot for styling. Gold active state is key."
     },
     {
@@ -468,7 +468,7 @@
         "npm run build passes"
       ],
       "priority": 27,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -483,7 +483,7 @@
         "npm run build passes"
       ],
       "priority": 28,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -499,7 +499,7 @@
         "npm run build passes"
       ],
       "priority": 29,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {

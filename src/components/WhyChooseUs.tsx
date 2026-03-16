@@ -1,58 +1,36 @@
-import { CheckCircle2, DollarSign, Zap } from "lucide-react";
+// KYSS Vision — How It Works (US-020)
+import { UserPlus, Search, Users, Briefcase } from 'lucide-react'
 
-const WhyChooseUs = () => {
+const steps = [
+  { icon: UserPlus, step: '01', title: 'Create Your Profile', description: 'Sign up as a worker or employer. Tell us your skills, visa type, and preferred regions.' },
+  { icon: Search, step: '02', title: 'Browse Work Types', description: 'Explore 9 categories of seasonal work across New Zealand and Australia.' },
+  { icon: Users, step: '03', title: 'Join a Pool', description: 'Find an open pool and join with one click. Joining = confirmed hire. No applications needed.' },
+  { icon: Briefcase, step: '04', title: 'Start Working', description: 'Connect with your employer in the pool feed, get your start date, and begin your adventure.' },
+]
 
-  const benefits = [
-    {
-      icon: CheckCircle2,
-      titleDe: "Geprüfte Fachleute",
-      titleEn: "Verified Professionals",
-      descriptionDe: "Alle Handwerker werden von uns geprüft. Erfahrung, Zertifikate und Versicherung werden kontrolliert.",
-      descriptionEn: "All contractors are verified by us. Experience, certificates and insurance are checked."
-    },
-    {
-      icon: DollarSign,
-      titleDe: "100% Kostenlos",
-      titleEn: "100% Free",
-      descriptionDe: "Unser Service ist für Sie völlig kostenlos. Keine versteckten Gebühren, keine Verpflichtungen.",
-      descriptionEn: "Our service is completely free for you. No hidden fees, no obligations."
-    },
-    {
-      icon: Zap,
-      titleDe: "Schnelle Antworten",
-      titleEn: "Fast Responses",
-      descriptionDe: "Sie erhalten Angebote, sobald Ihre Anfrage eingegangen ist. Unsere geprüften Fachleute antworten schnell und zuverlässig.",
-      descriptionEn: "You receive quotes as soon as your request is received. Our verified professionals respond quickly and reliably."
-    }
-  ];
-
+export default function WhyChooseUs() {
   return (
-    <section className="mt-24 px-4 sm:px-6 lg:px-12">
-      <div className="glass-card rounded-3xl p-8 lg:p-12">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground font-serif font-normal">
-            {"Why KYSS Vision?"}
-          </h2>
+    <section className="py-20 bg-card/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">How It Works</h2>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+            From sign-up to first day of work in four simple steps.
+          </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {benefits.map((benefit, index) => (
-            <div key={index} className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-                <benefit.icon className="w-8 h-8 text-primary" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {steps.map((s) => (
+            <div key={s.step} className="relative">
+              <div className="text-5xl font-black text-primary/10 mb-3">{s.step}</div>
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <s.icon className="w-5 h-5 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold text-foreground mb-3">
-                {benefit.titleEn}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {benefit.descriptionEn}
-              </p>
+              <h3 className="text-base font-semibold text-foreground mb-2">{s.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
             </div>
           ))}
         </div>
       </div>
     </section>
-  );
-};
-
-export default WhyChooseUs;
+  )
+}

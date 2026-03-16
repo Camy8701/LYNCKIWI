@@ -1,115 +1,68 @@
+// KYSS Vision — Footer (US-018)
+import { Link } from 'react-router-dom'
 
-const Footer = () => {
+const workTypes = [
+  { label: 'Fruit Picking', slug: 'fruit-picking' },
+  { label: 'Grape Harvesting', slug: 'grape-harvesting' },
+  { label: 'Pruning', slug: 'pruning' },
+  { label: 'Packing & Sorting', slug: 'packing-sorting' },
+  { label: 'Dairy Farming', slug: 'dairy-farming' },
+  { label: 'Vegetable Farming', slug: 'vegetable-farming' },
+  { label: 'Greenhouse Work', slug: 'greenhouse-work' },
+  { label: 'General Farm Labour', slug: 'general-farm-labour' },
+  { label: 'Orchard Work', slug: 'orchard-work' },
+]
 
-  const serviceLinks = [
-    { nameDe: "Heizung & HVAC", nameEn: "Heating & HVAC", slug: "/services/heizung" },
-    { nameDe: "Solar & Photovoltaik", nameEn: "Solar & Photovoltaic", slug: "/services/solar" },
-    { nameDe: "Dachdecker", nameEn: "Roofing", slug: "/services/dachdecker" },
-    { nameDe: "Klempner", nameEn: "Plumbing", slug: "/services/klempner" },
-    { nameDe: "Elektriker", nameEn: "Electrician", slug: "/services/elektriker" },
-    { nameDe: "Wärmepumpe", nameEn: "Heat Pump Systems", slug: "/services/waermepumpe" },
-    { nameDe: "Klimatechnik & Lüftung", nameEn: "Air Conditioning & Ventilation", slug: "/services/klimatechnik" },
-    { nameDe: "Service & Beratung", nameEn: "Service & Consultation", slug: "/services/service-beratung" },
-    { nameDe: "Sanitär", nameEn: "Sanitary", slug: "/services/sanitaer" }
-  ];
-
-  const companyLinks = [
-    { nameDe: "Über uns", nameEn: "About Us", slug: "/about" },
-    { nameDe: "Blog", nameEn: "Blog", slug: "/blog" },
-    { nameDe: "Für Unternehmen", nameEn: "For Businesses", slug: "/for-businesses" },
-    { nameDe: "Werbung", nameEn: "Advertise", slug: "/advertise" },
-    { nameDe: "Kontakt", nameEn: "Contact", slug: "/contact" }
-  ];
-
-  const legalLinks = [
-    { nameDe: "Datenschutz", nameEn: "Privacy Policy", slug: "/privacy" },
-    { nameDe: "AGB", nameEn: "Terms & Conditions", slug: "/terms" },
-    { nameDe: "Impressum", nameEn: "Legal Notice", slug: "/impressum" },
-    { nameDe: "Cookie-Richtlinie", nameEn: "Cookie Policy", slug: "/cookies" }
-  ];
-
+export default function Footer() {
   return (
-    <footer className="mt-24 px-4 sm:px-6 lg:px-12 mb-8">
-      <div className="glass-card rounded-3xl px-6 md:px-12 lg:px-16 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          {/* Column 1: About */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg"></div>
-              <span className="text-lg font-semibold text-foreground tracking-tight">KYSS Vision</span>
-            </div>
+    <footer className="bg-background border-t border-border mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="space-y-3">
+            <Link to="/" className="text-lg font-bold text-primary">KYSS Vision</Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {"We connect homeowners with verified contractors across Germany. Free, fast and uncomplicated."}
+              Connecting backpackers with verified seasonal employers across New Zealand and Australia.
             </p>
+            <div className="flex gap-3 pt-2">
+              <span className="text-xs text-muted-foreground">🇳🇿 New Zealand</span>
+              <span className="text-xs text-muted-foreground">🇦🇺 Australia</span>
+            </div>
           </div>
-
-          {/* Column 2: Services */}
-          <div>
-            <h3 className="text-sm font-semibold text-foreground mb-4">
-              {"Services"}
-            </h3>
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-foreground">Work Types</h4>
             <ul className="space-y-2">
-              {serviceLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.slug}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
-                  >
-                    {link.nameEn}
-                  </a>
+              {workTypes.map((w) => (
+                <li key={w.slug}>
+                  <Link to={`/work/${w.slug}`} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{w.label}</Link>
                 </li>
               ))}
             </ul>
           </div>
-
-          {/* Column 3: Company */}
-          <div>
-            <h3 className="text-sm font-semibold text-foreground mb-4">
-              {"Company"}
-            </h3>
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-foreground">Company</h4>
             <ul className="space-y-2">
-              {companyLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.slug}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
-                  >
-                    {link.nameEn}
-                  </a>
-                </li>
+              {[['About', '/about'], ['Blog', '/blog'], ['Backpacker Guide', '/guide'], ['For Employers', '/for-employers'], ['How It Works', '/how-it-works'], ['Contact', '/contact']].map(([label, path]) => (
+                <li key={path}><Link to={path} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{label}</Link></li>
               ))}
             </ul>
           </div>
-
-          {/* Column 4: Legal */}
-          <div>
-            <h3 className="text-sm font-semibold text-foreground mb-4">
-              {"Legal"}
-            </h3>
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-foreground">Legal</h4>
             <ul className="space-y-2">
-              {legalLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.slug}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
-                  >
-                    {link.nameEn}
-                  </a>
-                </li>
+              {[['Privacy Policy', '/privacy'], ['Terms of Service', '/terms'], ['Cookie Policy', '/cookies']].map(([label, path]) => (
+                <li key={path}><Link to={path} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{label}</Link></li>
               ))}
             </ul>
+            <div className="pt-4">
+              <p className="text-xs text-muted-foreground">Questions? <a href="mailto:hello@kyssvision.com" className="text-primary hover:underline">hello@kyssvision.com</a></p>
+            </div>
           </div>
         </div>
-
-        {/* Footer Bottom */}
-        <div className="border-t border-white/[0.06] pt-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            {"© 2025 KYSS Vision. All rights reserved."}
-          </p>
+        <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} KYSS Vision. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">Built for backpackers working in 🇳🇿 New Zealand & 🇦🇺 Australia</p>
         </div>
       </div>
     </footer>
-  );
-};
-
-export default Footer;
+  )
+}

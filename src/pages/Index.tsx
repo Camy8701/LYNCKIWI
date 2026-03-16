@@ -1,38 +1,33 @@
-// US-001: Removed deleted imports (AdSidebar, AdCarousel, ads lib, PortfolioGrid)
-// US-024 will fully rebuild this page with KYSS sections
-import Navigation from "@/components/Navigation";
-import HeroSection from "@/components/HeroSection";
-import SecurityBadges from "@/components/SecurityBadges";
-import TrustBadges from "@/components/TrustBadges";
-import FeaturesSection from "@/components/FeaturesSection";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
-import { SEO } from "@/lib/seo";
+// KYSS Vision — Landing Page (US-024)
+import Navigation from '@/components/Navigation'
+import HeroSection from '@/components/HeroSection'
+import CategoryGrid from '@/components/categories/CategoryGrid'
+import FeaturesSection from '@/components/FeaturesSection'
+import WhyChooseUs from '@/components/WhyChooseUs'
+import TestimonialsSection from '@/components/TestimonialsSection'
+import ContactSection from '@/components/ContactSection'
+import Footer from '@/components/Footer'
+import { Helmet } from 'react-helmet-async'
 
-const Index = () => {
+export default function Index() {
   return (
     <>
-      <SEO
-        title="KYSS Vision — Find Farm Work in New Zealand & Australia"
-        description="Join verified backpackers already matched with seasonal employers. Safe, fast, and built for travelers."
-        canonicalUrl="/"
-        ogType="website"
-      />
-      <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>KYSS Vision — Find Farm Work in New Zealand & Australia</title>
+        <meta name="description" content="Join verified backpackers already matched with seasonal employers across NZ and AU. Safe, fast, and built for working holiday visa holders." />
+      </Helmet>
+      <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
-        <HeroSection />
-        <SecurityBadges />
-        <TrustBadges />
-        <FeaturesSection />
-        <WhyChooseUs />
-        <TestimonialsSection />
-        <ContactSection />
+        <main className="flex-1">
+          <HeroSection />
+          <CategoryGrid />
+          <FeaturesSection />
+          <WhyChooseUs />
+          <TestimonialsSection />
+          <ContactSection />
+        </main>
         <Footer />
       </div>
     </>
-  );
-};
-
-export default Index;
+  )
+}
