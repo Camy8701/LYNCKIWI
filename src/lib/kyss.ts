@@ -191,6 +191,25 @@ export async function updateWorkerProfile(
   return { error: error?.message ?? null }
 }
 
+export async function isWorkerProfileComplete(userId: string): Promise<boolean> {
+  const { data } = await supabase
+    .from('worker_profiles')
+    .select('profile_complete')
+    .eq('user_id', userId)
+    .maybeSingle()
+  return data?.profile_complete ?? false
+}
+
+export async function updateUserProfileName(
+  userId: string,
+  name: string
+): Promise<void> {
+  await supabase
+    .from('user_profiles')
+    .update({ name })
+    .eq('user_id', userId)
+}
+
 export async function updateEmployerProfile(
   userId: string,
   updates: Partial<EmployerProfile>

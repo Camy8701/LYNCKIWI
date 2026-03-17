@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ChevronRight, ChevronLeft, Check, Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import { updateWorkerProfile } from '@/lib/kyss'
+import { updateWorkerProfile, updateUserProfileName } from '@/lib/kyss'
 import { nzRegions, auRegions, allRegions } from '@/data/regionsData'
 
 const STEPS = ['Personal', 'Nationality', 'Visa', 'Experience', 'Availability', 'Review']
@@ -32,8 +32,8 @@ export default function ProfileWizard() {
     preferred_regions: [] as string[],
     available_from: '',
     available_until: '',
-    accommodation_needed: false,
-    transport_available: false,
+    accommodation_pref: 'flexible' as string,
+    has_transport: false,
   })
 
   const set = (key: string, value: unknown) => setForm((f) => ({ ...f, [key]: value }))
@@ -50,13 +50,21 @@ export default function ProfileWizard() {
     setSaving(true)
     setError('')
     const { error: err } = await updateWorkerProfile(user.id, {
-      ...form,
+      visa_type: form.visa_type as any,
+      visa_expiry: form.visa_expiry || null,
+      experience_level: form.experience_level as any,
+      bio: form.bio || null,
+      region_preferences: form.preferred_regions,
+      accommodation_pref: form.accommodation_pref as any,
+      has_transport: form.has_transport,
       profile_complete: true,
     })
     if (err) {
       setError(err)
       setSaving(false)
     } else {
+      // Update name in user_profiles too
+      if (form.full_name) await updateUserProfileName(user.id, form.full_name)
       await refreshProfile()
       navigate('/worker/dashboard')
     }
@@ -186,13 +194,19 @@ export default function ProfileWizard() {
                     ))}
                   </div>
                 </div>
-                <div className="flex gap-4">
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm font-medium text-foreground block mb-2">Accommodation</label>
+                    <div className="flex flex-wrap gap-2">
+                      {['provided', 'self_arranged', 'flexible'].map((opt) => (
+                        <button key={opt} type="button" onClick={() => set('accommodation_pref', opt)} className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${form.accommodation_pref === opt ? 'bg-primary text-primary-foreground border-primary' : 'bg-background text-muted-foreground border-border hover:border-primary'}`}>
+                          {opt === 'provided' ? 'Need provided' : opt === 'self_arranged' ? 'Self-arranged' : 'Flexible'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={form.accommodation_needed} onChange={(e) => set('accommodation_needed', e.target.checked)} className="rounded border-border" />
-                    <span className="text-sm text-foreground">Need accommodation</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={form.transport_available} onChange={(e) => set('transport_available', e.target.checked)} className="rounded border-border" />
+                    <input type="checkbox" checked={form.has_transport} onChange={(e) => set('has_transport', e.target.checked)} className="rounded border-border" />
                     <span className="text-sm text-foreground">Have own transport</span>
                   </label>
                 </div>

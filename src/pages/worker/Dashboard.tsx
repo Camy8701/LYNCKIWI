@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async'
 import { Briefcase, Bell, MessageSquare, Search, ChevronRight, Loader2, UserCircle, MapPin, Star, Users, Calendar, ArrowRight } from 'lucide-react'
 import WorkerLayout from '@/components/WorkerLayout'
 import { useAuth } from '@/contexts/AuthContext'
-import { getWorkerPools, getNotifications } from '@/lib/kyss'
+import { getWorkerPools, getNotifications, isWorkerProfileComplete } from '@/lib/kyss'
 import StatusBadge from '@/components/pools/StatusBadge'
 import type { WorkPool, Notification } from '@/integrations/supabase/types'
 
@@ -14,15 +14,18 @@ export default function WorkerDashboard() {
   const [pools, setPools] = useState<WorkPool[]>([])
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [loading, setLoading] = useState(true)
+  const [profileComplete, setProfileComplete] = useState(true)
 
   useEffect(() => {
     if (!user) return
     Promise.all([
       getWorkerPools(user.id),
       getNotifications(user.id, 5),
-    ]).then(([p, n]) => {
+      isWorkerProfileComplete(user.id),
+    ]).then(([p, n, complete]) => {
       setPools(p)
       setNotifications(n)
+      setProfileComplete(complete)
       setLoading(false)
     }).catch(() => setLoading(false))
   }, [user])
@@ -44,7 +47,7 @@ export default function WorkerDashboard() {
           </div>
 
           {/* Profile completion prompt */}
-          {!userProfile?.profile_complete && (
+          {!profileComplete && (
             <div className="glass-card rounded-2xl p-5 border-primary/30 bg-primary/5">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">

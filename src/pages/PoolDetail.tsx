@@ -1,5 +1,5 @@
 // KYSS Vision — PoolDetail Page (US-032, US-034, US-035)
-import { useParams, Link, useSearchParams } from 'react-router-dom'
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, MapPin, Calendar, DollarSign, Users, Loader2, Star, Send, Briefcase } from 'lucide-react'
@@ -7,7 +7,7 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import StatusBadge from '@/components/pools/StatusBadge'
 import { useAuth } from '@/contexts/AuthContext'
-import { getPoolById, joinPool, leavePool, getPoolPosts, createPoolPost, getPoolReviews } from '@/lib/kyss'
+import { getPoolById, joinPool, leavePool, getPoolPosts, createPoolPost, getPoolReviews, isWorkerProfileComplete } from '@/lib/kyss'
 import type { WorkPool, PoolPost, Review } from '@/integrations/supabase/types'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -17,6 +17,7 @@ export default function PoolDetail() {
   const { id } = useParams<{ id: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTab = (searchParams.get('tab') as Tab) || 'about'
+  const navigate = useNavigate()
   const { user, userProfile, role } = useAuth()
 
   const [pool, setPool] = useState<WorkPool | null>(null)
@@ -57,6 +58,12 @@ export default function PoolDetail() {
 
   const handleJoin = async () => {
     if (!id || !user) return
+    // Check profile completion before joining
+    const complete = await isWorkerProfileComplete(user.id)
+    if (!complete) {
+      navigate('/worker/profile-wizard')
+      return
+    }
     setJoining(true)
     setActionMsg('')
     const { error } = await joinPool(user.id, id)
@@ -87,6 +94,11 @@ export default function PoolDetail() {
 
   const handlePostFeed = async () => {
     if (!id || !user || !newPost.trim()) return
+    const complete = await isWorkerProfileComplete(user.id)
+    if (!complete) {
+      navigate('/worker/profile-wizard')
+      return
+    }
     setPostingFeed(true)
     await createPoolPost(id, user.id, newPost.trim())
     setNewPost('')

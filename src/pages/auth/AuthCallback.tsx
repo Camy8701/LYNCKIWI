@@ -37,8 +37,7 @@ export default function AuthCallback() {
         // Profile exists — redirect based on role
         if (profile.role === "admin") navigate("/admin")
         else if (profile.role === "employer") navigate("/employer/dashboard")
-        else if (profile.role === "worker") navigate("/worker/dashboard")
-        else navigate("/worker/profile-wizard")
+        else navigate("/worker/dashboard")
         return
       }
 
@@ -64,8 +63,8 @@ export default function AuthCallback() {
       // Refresh auth context so role is available
       await refreshProfile()
 
-      // Send new user to profile wizard
-      navigate("/worker/profile-wizard")
+      // Send new user to dashboard — profile completion is prompted later
+      navigate("/worker/dashboard")
     }
 
     handleOAuth()
