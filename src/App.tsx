@@ -104,6 +104,7 @@ const App = () => (
 
                 {/* AUTH ROUTES */}
                 <Route path="/auth/sign-in" element={<SignIn />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/auth/sign-up" element={<SignUp />} />
 
                 {/* WORK DISCOVERY */}

@@ -1,8 +1,8 @@
 // ============================================================
 // KYSS Vision — AuthContext
 // US-011: Three-role auth context (worker | employer | admin)
+// Updated: Google OAuth + fixed post-signup redirect
 // ============================================================
-
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
@@ -23,6 +23,7 @@ interface AuthContextType {
     role: UserRole,
     country: string
   ) => Promise<{ error: string | null }>
+  signInWithGoogle: (pendingRole?: UserRole, pendingCountry?: string) => Promise<{ error: string | null }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
 }
@@ -39,18 +40,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchUserProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', userId)
+        .from("user_profiles")
+        .select("*")
+        .eq("user_id", userId)
         .single()
-
       if (error) {
-        console.error('Error fetching user profile:', error)
+        console.error("Error fetching user profile:", error)
         return null
       }
       return data as UserProfile
     } catch (err) {
-      console.error('Unexpected error fetching profile:', err)
+      console.error("Unexpected error fetching profile:", err)
       return null
     }
   }
@@ -60,25 +60,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const profile = await fetchUserProfile(user.id)
     if (profile) {
       setUserProfile(profile)
-      setRole(profile.role)
+      setRole(profile.role as UserRole)
     }
   }
 
   useEffect(() => {
-    // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session)
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          // Defer profile fetch to avoid Supabase deadlock
           setTimeout(async () => {
-            const profile = await fetchUserProfile(session.user.id)
-            if (profile) {
-              setUserProfile(profile)
-              setRole(profile.role)
+            let profile = await fetchUserProfile(session.user.id)
+
+            // Google OAuth: create profile if it does not exist yet
+            if (!profile && (event === "SIGNED_IN" || event === "TOKEN_REFRESHED")) {
+              const pendingRole = (localStorage.getItem("kyss_pending_role") as UserRole) || "worker"
+              const pendingCountry = localStorage.getItem("kyss_pending_country") || "NZ"
+              const name =
+                session.user.user_metadata?.full_name ||
+                session.user.email?.split("@")[0] ||
+                "User"
+
+              const { error: profileError } = await supabase
+                .from("user_profiles")
+                .insert({
+                  user_id: session.user.id,
+                  role: pendingRole,
+                  name,
+                  country: pendingCountry,
+                  status: "active",
+                })
+
+              if (!profileError) {
+                if (pendingRole === "worker") {
+                  await supabase.from("worker_profiles").insert({
+                    user_id: session.user.id,
+                    has_transport: false,
+                    profile_complete: false,
+                  })
+                } else if (pendingRole === "employer") {
+                  await supabase.from("employer_profiles").insert({
+                    user_id: session.user.id,
+                    business_name: name,
+                    country: pendingCountry,
+                    verified: false,
+                  })
+                }
+                localStorage.removeItem("kyss_pending_role")
+                localStorage.removeItem("kyss_pending_country")
+                profile = await fetchUserProfile(session.user.id)
+              }
             }
+
+            setUserProfile(profile)
+            setRole((profile?.role as UserRole) ?? null)
             setIsLoading(false)
           }, 0)
         } else {
@@ -89,11 +126,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     )
 
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        setIsLoading(false)
-      }
+      if (!session) setIsLoading(false)
     })
 
     return () => subscription.unsubscribe()
@@ -105,7 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) return { error: error.message }
       return { error: null }
     } catch (err) {
-      return { error: 'An unexpected error occurred. Please try again.' }
+      return { error: "An unexpected error occurred. Please try again." }
     }
   }
 
@@ -117,35 +151,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     country: string
   ): Promise<{ error: string | null }> => {
     try {
-      const { data, error } = await supabase.auth.signUp({ email, password })
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: name },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
       if (error) return { error: error.message }
-      if (!data.user) return { error: 'Sign up failed. Please try again.' }
+      if (!data.user) return { error: "Sign up failed. Please try again." }
 
-      // Create user_profiles row
       const { error: profileError } = await supabase
-        .from('user_profiles')
+        .from("user_profiles")
         .insert({
           user_id: data.user.id,
           role,
           name,
           country,
-          status: 'active',
+          status: "active",
         })
 
       if (profileError) {
-        console.error('Error creating user profile:', profileError)
-        return { error: 'Account created but profile setup failed. Please contact support.' }
+        console.error("Error creating user profile:", profileError)
+        // Non-fatal: profile may be created on first sign-in
       }
 
-      // Create role-specific profile row
-      if (role === 'worker') {
-        await supabase.from('worker_profiles').insert({
+      if (role === "worker") {
+        await supabase.from("worker_profiles").insert({
           user_id: data.user.id,
           has_transport: false,
           profile_complete: false,
         })
-      } else if (role === 'employer') {
-        await supabase.from('employer_profiles').insert({
+      } else if (role === "employer") {
+        await supabase.from("employer_profiles").insert({
           user_id: data.user.id,
           business_name: name,
           country,
@@ -155,7 +194,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return { error: null }
     } catch (err) {
-      return { error: 'An unexpected error occurred. Please try again.' }
+      return { error: "An unexpected error occurred. Please try again." }
+    }
+  }
+
+  const signInWithGoogle = async (
+    pendingRole: UserRole = "worker",
+    pendingCountry = "NZ"
+  ): Promise<{ error: string | null }> => {
+    try {
+      localStorage.setItem("kyss_pending_role", pendingRole)
+      localStorage.setItem("kyss_pending_country", pendingCountry)
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+      if (error) return { error: error.message }
+      return { error: null }
+    } catch (err) {
+      return { error: "Google sign-in failed. Please try again." }
     }
   }
 
@@ -176,6 +235,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
     signIn,
     signUp,
+    signInWithGoogle,
     signOut,
     refreshProfile,
   }
@@ -186,7 +246,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error("useAuth must be used within an AuthProvider")
   }
   return context
 }
