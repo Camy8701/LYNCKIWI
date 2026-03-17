@@ -12,6 +12,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 // Auth Pages
 const SignIn = lazy(() => import("./pages/auth/SignIn"));
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
+const AuthCallback = lazy(() => import("./pages/auth/AuthCallback"));
 
 // Public Pages
 const Index = lazy(() => import("./pages/Index"));
