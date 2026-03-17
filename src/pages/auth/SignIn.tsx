@@ -26,7 +26,7 @@ function GoogleIcon() {
 
 export default function SignIn() {
   const navigate = useNavigate()
-  const { signIn, signInWithGoogle, role } = useAuth()
+  const { signIn, signInWithGoogle } = useAuth()
 
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -64,7 +64,6 @@ export default function SignIn() {
     navigate('/auth/callback')
   }
 
-
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
     setServerError(null)
@@ -90,7 +89,6 @@ export default function SignIn() {
               <AlertDescription>{serverError}</AlertDescription>
             </Alert>
           )}
-
 
           {/* Google Sign In */}
           <Button

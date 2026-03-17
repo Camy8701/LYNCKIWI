@@ -1,6 +1,11 @@
-// KYSS Vision — Landing Page (US-024)
+// KYSS Vision — Landing Page (Social platform style)
+// Non-logged-in: Hero + Sign-in form (Facebook-style)
+// Logged-in: Redirects to worker/employer/admin dashboard
+import { useAuth } from '@/contexts/AuthContext'
+import { Navigate } from 'react-router-dom'
 import Navigation from '@/components/Navigation'
 import HeroSection from '@/components/HeroSection'
+import SecurityBadges from '@/components/SecurityBadges'
 import CategoryGrid from '@/components/categories/CategoryGrid'
 import FeaturesSection from '@/components/FeaturesSection'
 import WhyChooseUs from '@/components/WhyChooseUs'
@@ -10,6 +15,15 @@ import Footer from '@/components/Footer'
 import { Helmet } from 'react-helmet-async'
 
 export default function Index() {
+  const { isAuthenticated, role, isLoading } = useAuth()
+
+  // If logged in, redirect to appropriate dashboard
+  if (!isLoading && isAuthenticated) {
+    if (role === 'admin') return <Navigate to="/admin" replace />
+    if (role === 'employer') return <Navigate to="/employer/dashboard" replace />
+    return <Navigate to="/worker/dashboard" replace />
+  }
+
   return (
     <>
       <Helmet>
@@ -18,8 +32,9 @@ export default function Index() {
       </Helmet>
       <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
-        <main className="flex-1">
+        <main className="flex-1 pt-4">
           <HeroSection />
+          <SecurityBadges />
           <CategoryGrid />
           <FeaturesSection />
           <WhyChooseUs />

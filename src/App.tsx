@@ -52,7 +52,6 @@ const EmployerPoolManagement = lazy(() => import("./pages/employer/PoolManagemen
 const EmployerProfile = lazy(() => import("./pages/employer/Profile"));
 
 // Admin Pages
-const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboardKYSS = lazy(() => import("./pages/admin/Dashboard"));
 const AdminWorkers = lazy(() => import("./pages/admin/Workers"));
 const AdminEmployers = lazy(() => import("./pages/admin/Employers"));
@@ -129,7 +128,7 @@ const App = () => (
                 <Route path="/employer/profile" element={<ProtectedRoute requiredRole="employer"><EmployerProfile /></ProtectedRoute>} />
 
                 {/* ADMIN ROUTES */}
-                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin/login" element={<SignIn />} />
                 <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboardKYSS /></ProtectedRoute>} />
                 <Route path="/admin/workers" element={<ProtectedRoute requiredRole="admin"><AdminWorkers /></ProtectedRoute>} />
                 <Route path="/admin/employers" element={<ProtectedRoute requiredRole="admin"><AdminEmployers /></ProtectedRoute>} />

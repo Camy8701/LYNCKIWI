@@ -1,29 +1,80 @@
-// KYSS Vision — CategoryCard (US-022)
+// KYSS Vision — CategoryCard (Redesigned — large glass cards with glow hover)
 import { Link } from 'react-router-dom'
-import { LucideIcon } from 'lucide-react'
+import { ArrowRight, LucideIcon, Apple, Grape, Scissors, Package, Milk, Sprout, Flower2, Tractor, TreePine, Hotel, HardHat, Leaf } from 'lucide-react'
+import type { WorkTypeCategoryData } from '@/data/workTypeCategoriesData'
 
-interface CategoryCardProps {
+const iconMap: Record<string, LucideIcon> = {
+  apple: Apple,
+  grape: Grape,
+  scissors: Scissors,
+  package: Package,
+  milk: Milk,
+  sprout: Sprout,
+  flower2: Flower2,
+  tractor: Tractor,
+  'tree-pine': TreePine,
+  hotel: Hotel,
+  'hard-hat': HardHat,
+  leaf: Leaf,
+}
+
+interface CategoryCardPropsExpanded {
   name: string
   slug: string
   description: string
-  icon: LucideIcon
+  icon: LucideIcon | string
+  poolCount?: number
+  category?: never
+}
+
+interface CategoryCardPropsObject {
+  category: WorkTypeCategoryData
+  name?: never
+  slug?: never
+  description?: never
+  icon?: never
   poolCount?: number
 }
 
-export default function CategoryCard({ name, slug, description, icon: Icon, poolCount }: CategoryCardProps) {
+type CategoryCardProps = CategoryCardPropsExpanded | CategoryCardPropsObject
+
+export default function CategoryCard(props: CategoryCardProps) {
+  const name = props.category?.name ?? props.name!
+  const slug = props.category?.slug ?? props.slug!
+  const description = props.category?.description ?? props.description!
+  const poolCount = props.poolCount
+
+  // Resolve icon
+  let Icon: LucideIcon
+  if (props.category) {
+    Icon = iconMap[props.category.icon] ?? Apple
+  } else if (typeof props.icon === 'string') {
+    Icon = iconMap[props.icon] ?? Apple
+  } else {
+    Icon = props.icon!
+  }
+
   return (
     <Link
       to={`/find-work/${slug}`}
-      className="group block bg-card border border-border rounded-2xl p-6 hover:border-primary/50 hover:bg-card/80 transition-all duration-200"
+      className="group glass-card block rounded-2xl p-7 hover:border-primary/50 transition-all duration-300"
     >
-      <div className="w-12 h-12 rounded-xl bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-4 transition-colors">
-        <Icon className="w-6 h-6 text-primary" />
+      <div className="flex items-start justify-between mb-5">
+        <div className="w-14 h-14 rounded-2xl bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+          <Icon className="w-7 h-7 text-primary" />
+        </div>
+        {poolCount !== undefined && poolCount > 0 && (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+            {poolCount} pool{poolCount !== 1 ? 's' : ''}
+          </span>
+        )}
       </div>
-      <h3 className="text-base font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">{name}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed mb-3">{description}</p>
-      {poolCount !== undefined && (
-        <span className="text-xs text-primary font-medium">{poolCount} open pool{poolCount !== 1 ? 's' : ''}</span>
-      )}
+      <h3 className="text-lg font-bold text-foreground mb-2.5 group-hover:text-primary transition-colors">{name}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed mb-5">{description}</p>
+      <div className="flex items-center gap-2 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        Explore pools <ArrowRight className="w-4 h-4" />
+      </div>
     </Link>
   )
 }

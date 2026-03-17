@@ -1,44 +1,24 @@
-import { Shield, Lock, Star, Users } from "lucide-react";
+// KYSS Vision — SecurityBadges (trust bar below hero)
+import { Shield, Lock, Star, Users } from 'lucide-react'
 
-const SecurityBadges = () => {
+const badges = [
+  { icon: Lock, label: 'SSL Encrypted' },
+  { icon: Shield, label: 'Verified Employers' },
+  { icon: Star, label: '4.9 Avg Rating' },
+  { icon: Users, label: 'Free for Workers' },
+]
 
-  const badges = [
-    {
-      icon: Shield,
-      textDe: "SSL Verschlüsselt",
-      textEn: "SSL Encrypted"
-    },
-    {
-      icon: Lock,
-      textDe: "DSGVO Konform",
-      textEn: "GDPR Compliant"
-    },
-    {
-      icon: Star,
-      textDe: "4.8★ Bewertung",
-      textEn: "4.8★ Rating"
-    },
-    {
-      icon: Users,
-      textDe: "Geprüfte Fachleute in Ihrer Nähe",
-      textEn: "Verified Professionals In Your Area"
-    }
-  ];
-
+export default function SecurityBadges() {
   return (
-    <div className="mx-4 md:mx-6 lg:mx-8 mb-12 mt-8">
-      <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8">
-        {badges.map((badge, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <badge.icon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-            <span className="text-xs text-muted-foreground">
-              {badge.textEn}
-            </span>
+    <div className="px-4 md:px-6 lg:px-8 mb-4">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-6 md:gap-8 py-4">
+        {badges.map((b) => (
+          <div key={b.label} className="flex items-center gap-2 text-muted-foreground">
+            <b.icon className="w-4 h-4 text-primary/60" />
+            <span className="text-xs font-medium">{b.label}</span>
           </div>
         ))}
       </div>
     </div>
-  );
-};
-
-export default SecurityBadges;
+  )
+}

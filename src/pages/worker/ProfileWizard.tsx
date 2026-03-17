@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async'
 import { ChevronRight, ChevronLeft, Check, Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { updateWorkerProfile } from '@/lib/kyss'
-import { nzRegions, auRegions } from '@/data/allRegions'
+import { nzRegions, auRegions, allRegions } from '@/data/regionsData'
 
 const STEPS = ['Personal', 'Nationality', 'Visa', 'Experience', 'Availability', 'Review']
 
@@ -61,8 +61,6 @@ export default function ProfileWizard() {
       navigate('/worker/dashboard')
     }
   }
-
-  const allRegions = [...allRegions.NZ, ...allRegions.AU]
 
   return (
     <>
